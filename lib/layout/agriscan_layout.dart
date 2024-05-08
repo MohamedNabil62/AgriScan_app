@@ -1,11 +1,13 @@
 import 'package:agriscan/layout/cubit/cubit.dart';
 import 'package:agriscan/layout/cubit/state.dart';
+import 'package:agriscan/shared/components/components.dart';
 import 'package:agriscan/shared/components/constants.dart';
 import 'package:agriscan/shared/styles/IconBroken.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../modules/user_modules/agriscan_cart/cart_screen.dart';
 import 'cubit/state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 class AgriScanLayout extends StatelessWidget {
@@ -28,7 +30,9 @@ class AgriScanLayout extends StatelessWidget {
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 12.0),
-              child:IconButton(onPressed: (){},
+              child:IconButton(onPressed: (){
+                nevgitto(context, CartScreen());
+              },
               icon: Icon(Icons.shopping_cart,
                 color: Colors.white,
                 size: 30,

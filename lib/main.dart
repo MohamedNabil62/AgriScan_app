@@ -4,7 +4,6 @@
 import 'package:agriscan/layout/agriscan_layout.dart';
 import 'package:agriscan/layout/cubit/cubit.dart';
 import 'package:agriscan/layout/cubit/state.dart';
-import 'package:agriscan/modules/login_sc/login_screen.dart';
 import 'package:agriscan/shared/bloc_observre.dart';
 import 'package:agriscan/shared/components/constants.dart';
 import 'package:agriscan/shared/network/local/cache_helper.dart';
@@ -12,6 +11,8 @@ import 'package:agriscan/shared/network/remote/dio_helper.dart';
 import 'package:agriscan/shared/styles/theme-data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'modules/user_modules/login_sc/login_screen.dart';
 
 
 Future main() async{
@@ -41,10 +42,6 @@ Future main() async{
   }
 
    */
-
-
-
-
   runApp(MyApp(isDark,widget));
 }
 class MyApp extends StatelessWidget
