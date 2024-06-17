@@ -7,6 +7,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../shared/components/constants.dart';
@@ -20,61 +21,18 @@ class BannerModel{
 }
 List<BannerModel>banner=[
   BannerModel(
-      image: "assets/images/growing-wheat-wind.jpg"
+      image: "https://img.freepik.com/free-photo/taking-cotton-from-branch-by-farmer_114579-3992.jpg?t=st=1717091845~exp=1717095445~hmac=92fcc3c7a998fbf72144d61563ecbbfa8270031abad5fd4e0664f117c512b7c1&w=740"
   ),
   BannerModel(
-      image: "assets/images/bunch-white-cotton-branch.jpg"
+      image: "https://img.freepik.com/premium-photo/fresh-tomatoes-basket-white-background_763111-9562.jpg?w=826"
   ),
   BannerModel(
-      image: "assets/images/water-drops-tomatoes-with-blurred-background.jpg"
+      image: "https://img.freepik.com/free-photo/corn-field-organic-farming-concept_23-2148617247.jpg?t=st=1717091700~exp=1717095300~hmac=bc47817663d4bd59e6160b95284d2f7f0247d12806b96cd08895340ed2ab596a&w=740"
   ),
   BannerModel(
-      image: "assets/images/green-plantation-with-harvest-village.jpg"
-  ),
-  BannerModel(
-      image: "assets/images/beautiful-shot-cornfield-with-blue-sky.jpg"
-  ),
-  BannerModel(
-      image: "assets/images/close-up-fresh-organic-eggplant-garden.jpg"
-  ),
-
-];
-
-class BoradingModel{
-  late final String? title;
-  late final String? image;
-  BoradingModel({
-    @required this.title,
-    @required  this.image
-  });
-}
-List<BoradingModel>borading=[
-  BoradingModel(
-      title:"Wheat Plant" ,
-      image: "assets/images/growing-wheat-wind.jpg"
-  ),
-  BoradingModel(
-      title:"Wheat Plant" ,
-      image: "assets/images/growing-wheat-wind.jpg"
-  ),
-  BoradingModel(
-      title:"Wheat Plant" ,
-      image: "assets/images/bunch-white-cotton-branch.jpg"
-  ),
-  BoradingModel(
-      title:"Wheat Plant" ,
-      image: "assets/images/green-plantation-with-harvest-village.jpg"
-  ),
-  BoradingModel(
-      title:"Wheat Plant" ,
-      image: "assets/images/beautiful-shot-cornfield-with-blue-sky.jpg"
-  ),
-  BoradingModel(
-      title:"Wheat Plant" ,
-      image: "assets/images/close-up-fresh-organic-eggplant-garden.jpg"
+      image: "https://img.freepik.com/free-photo/close-up-golden-wheat-spices_23-2148262592.jpg?t=st=1717090848~exp=1717094448~hmac=27c2ce37b2da97154fcefb17dff8f5dbc57e8cd7cbfd10d68f71c03a57b6a222&w=740"
   ),
 ];
-
 class AgriScanCropsScreen extends StatelessWidget {
   const AgriScanCropsScreen({Key? key}) : super(key: key);
 
@@ -84,7 +42,12 @@ class AgriScanCropsScreen extends StatelessWidget {
       builder:(context, state) =>ConditionalBuilder(
         condition:true,//AgriScanCubit.get(context).hommodel != null && AgriScanCubit.get(context).categoriesmodel != null ,
         builder:(context) => productsBuilder(context),//AgriScanCubit.get(context).hommodel as HomeModel,AgriScanCubit.get(context).categoriesmodel as CategoriesModel,context),
-        fallback: (context) => Center(child: CircularProgressIndicator()),
+        fallback: (context) => Center(
+          child: SpinKitFadingCircle(
+            color: Colors.green,
+            size: 50,
+          ),
+        ),
       ),
       listener: (context, state) {
         /*
@@ -114,7 +77,7 @@ Widget productsBuilder(context)//HomeModel model, context )
       children: [
         CarouselSlider(
             items:banner.map((e) => Image(
-              image: AssetImage("${e.image}"),
+              image: NetworkImage("${e.image}"),
               width: double.infinity,
               fit: BoxFit.cover,
             )
@@ -142,10 +105,10 @@ Widget productsBuilder(context)//HomeModel model, context )
               crossAxisCount: 2,
               mainAxisSpacing: 6,
               crossAxisSpacing: 6,
-              childAspectRatio: 1/1,
+              childAspectRatio: 1/1.3,
               children: List.generate(
-                 borading.length,
-                      (index) =>productGridviewbuider( borading[index],context)
+                6,
+                      (index) =>productGridviewbuider( context)
               ),
             ),
           ),
@@ -155,7 +118,7 @@ Widget productsBuilder(context)//HomeModel model, context )
   );
 }
 
-Widget productGridviewbuider( BoradingModel mod,context) => GestureDetector(
+Widget productGridviewbuider( context) => GestureDetector(
   onTap:(){
     nevgitto(context,  PlantDetails());
   },
@@ -173,8 +136,7 @@ Widget productGridviewbuider( BoradingModel mod,context) => GestureDetector(
               child: ClipRRect(
                 borderRadius: BorderRadius.only(topRight:Radius.circular(20),topLeft:Radius.circular(20) ),
                 child: Image(
-                  image: AssetImage("${mod.image}",),
-
+                  image:NetworkImage("https://img.freepik.com/free-photo/close-up-golden-wheat-spices_23-2148262592.jpg?t=st=1717090848~exp=1717094448~hmac=27c2ce37b2da97154fcefb17dff8f5dbc57e8cd7cbfd10d68f71c03a57b6a222&w=740",),
                 ),
               ),
             ),
@@ -183,7 +145,7 @@ Widget productGridviewbuider( BoradingModel mod,context) => GestureDetector(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("${mod.title}",
+                  Text("Wheat",
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.start,

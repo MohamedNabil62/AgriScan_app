@@ -3,18 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../../shared/components/constants.dart';
+import '../../../shared/styles/IconBroken.dart';
 import 'details_day.dart';
 
 class WeekDaysList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Week Days',
-          style: GoogleFonts.poppins(
-            color: kDarkGreenColor,
+      appBar:  AppBar(
+        title: const Text(
+          "Week Days",
+          style: TextStyle(color: Colors.white),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            IconBroken.Arrow___Left_2,
+            color: Colors.white,
           ),
         ),
+        backgroundColor: kDarkGreenColor,
       ),
       body: ListView.builder(
         itemCount: 7, // Number of days in a week

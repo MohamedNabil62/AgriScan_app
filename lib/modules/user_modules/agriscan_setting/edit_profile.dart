@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../layout/cubit/state.dart';
 import '../../../shared/components/components.dart';
+import '../../../shared/components/constants.dart';
 import '../../../shared/styles/IconBroken.dart';
 import '../../../shared/styles/colors.dart';
 var namecontroller=TextEditingController();
@@ -22,33 +23,41 @@ class EditProfileScreen extends StatelessWidget {
          //var usermodel=SocailCubit.get(context).mode;
           var profileImage=AgriScanCubit.get(context).profileImage;
         //  var coverImage=SocailCubit.get(context).coverImage;
-          namecontroller.text='Mohamed Nabil';
+          namecontroller.text='User';
           biocontroller.text='bio....';
-          phonecontroller.text='01095974599';
+          phonecontroller.text='8239789232';
           return  Scaffold(
-            appBar: defaultAppBar(
-                context: context,
-                text: "Edit Profile",
-                action: [
-                  defaultTextButten(
-                      function: (){
-                      //  SocailCubit.get(context).updateUser(name: namecontroller.text, bio: biocontroller.text, phone: phonecontroller.text);
-                      },
-                      text:'update'
+            appBar: AppBar(
+              title: const Text(
+                "Edit Profile",
+                style: TextStyle(color: Colors.white),
+              ),
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(
+                  IconBroken.Arrow___Left_2,
+                  color: Colors.white,
+                ),
+              ),
+              backgroundColor: kDarkGreenColor,
+              actions: [
+                TextButton(onPressed: (){}, child: Text("update".toUpperCase(),
+                  style: TextStyle(
+                      color: Colors.white
                   ),
-                  SizedBox(
-                    width: 15,)
-                ]
+                ),
+                ),
+                SizedBox(width: 15,)
+              ],
             ),
             body: SingleChildScrollView(
               child: Column(children: [
                 if(false)
                   LinearProgressIndicator(),
-                SizedBox(
-                  height: 10,
-                ),
                 Container(
-                  height: 190,
+                  height: 230,
                   child: Stack(
                     alignment: AlignmentDirectional.bottomCenter,
                     children: [
@@ -58,7 +67,7 @@ class EditProfileScreen extends StatelessWidget {
                           alignment: AlignmentDirectional.topEnd,
                           children: [
                             Container(
-                              height: 140,
+                              height: 190,
                               width: double.infinity,
                               decoration:  BoxDecoration(
                                   borderRadius: BorderRadius.only(
@@ -66,7 +75,7 @@ class EditProfileScreen extends StatelessWidget {
                                       topRight:  Radius.circular(4)
                                   ),
                                   image: DecorationImage(
-                                    image:AssetImage("assets/images/mohamed_nabil.jpg"),
+                                    image:NetworkImage("https://img.freepik.com/free-photo/portrait-farmer-holding-crate-full-strawberries-fruit-greenhouse_342744-504.jpg?t=st=1717108285~exp=1717111885~hmac=75034d1dff3337c47a3dc991fa930900d1e8732d909fa0f69e0586cce3056ac3&w=740"),
                                     fit: BoxFit.cover,
                                   )
                               ),
@@ -98,7 +107,7 @@ class EditProfileScreen extends StatelessWidget {
                          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                          child: CircleAvatar(
                            radius:60,
-                           backgroundImage:profileImage==null? AssetImage('assets/images/mohamed_nabil.jpg') as ImageProvider<Object>?:FileImage(profileImage),
+                           backgroundImage:profileImage==null? NetworkImage('https://img.freepik.com/free-photo/portrait-farmer-holding-crate-full-strawberries-fruit-greenhouse_342744-504.jpg?t=st=1717108285~exp=1717111885~hmac=75034d1dff3337c47a3dc991fa930900d1e8732d909fa0f69e0586cce3056ac3&w=740') as ImageProvider<Object>?:FileImage(profileImage),
                          ),
                        ),
                        CircleAvatar(

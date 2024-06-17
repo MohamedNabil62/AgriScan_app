@@ -11,7 +11,7 @@ class  AgriScanRegisterInitialState extends AgriScanRegisterStates{}
 class  AgriScanRegisterLoadingState extends AgriScanRegisterStates{}
 
 class  AgriScanRegisterSuccessState extends AgriScanRegisterStates{
-   final ShopRegistrMode RegisterModel;
+   final AgriScanRegistrModel RegisterModel;
 
   AgriScanRegisterSuccessState(this.RegisterModel);
 }

@@ -1,41 +1,45 @@
-class ShopLoginModel{
-  late bool status;
-  late String message;
-late  UserData data;
-  ShopLoginModel.formJson(Map<String,dynamic>json){
-    status=json['status'];
-    message=json['message'];
-      data=(json['data'] != null ? UserData.formJson(json['data']):UserData(id:12, name:"mohamed", email:"mo", phone: "01095", image:"mm", points:1, credit: 1, token:"kkk"))!;
+class AgriScanLoginModel {
+  int? success;
+  DataAgriScanLoginModel? data;
+  String? message;
+  int? code;
+
+  AgriScanLoginModel({this.success, this.data, this.message, this.code});
+
+  AgriScanLoginModel.fromJson(Map<String, dynamic> json) {
+    success = json['success'];
+    data = json['data'] != null ? new DataAgriScanLoginModel.fromJson(json['data']) : null;
+    message = json['message'];
+    code = json['code'];
   }
 }
 
-class UserData{
-  late int id;
-  late String name;
-  late String phone;
-  late String email;
-  late String image;
-  late int points;
-  late int credit;
-  late String token;
-  UserData({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.phone,
-    required this.image,
-    required this.points,
-    required this.credit,
-    required this.token
-});
-  UserData.formJson(Map<String,dynamic>json){
-    id=json['id'];
-    name=json['name'];
-    email=json['email'];
-    phone=json['phone'];
-    image=json['image'];
-    points=json['points'];
-    credit=json['credit'];
-    token=json['token'];
+class DataAgriScanLoginModel {
+  String? token;
+  UserAgriScanLoginModel? user;
+
+  DataAgriScanLoginModel({this.token, this.user});
+
+  DataAgriScanLoginModel.fromJson(Map<String, dynamic> json) {
+    token = json['token'];
+    user = json['user'] != null ? new UserAgriScanLoginModel.fromJson(json['user']) : null;
   }
+
+}
+
+class UserAgriScanLoginModel {
+  int? id;
+  String? name;
+  String? email;
+  String? role;
+
+  UserAgriScanLoginModel({this.id, this.name, this.email, this.role});
+
+  UserAgriScanLoginModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    email = json['email'];
+    role = json['role'];
+  }
+
 }

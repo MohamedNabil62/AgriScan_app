@@ -37,7 +37,7 @@ class AgriScanSettingScreen extends StatelessWidget {
                                 topRight:  Radius.circular(4)
                             ),
                             image: DecorationImage(
-                              image:AssetImage("assets/images/mohamed_nabil.jpg"),
+                              image:NetworkImage("https://img.freepik.com/free-photo/portrait-farmer-holding-crate-full-strawberries-fruit-greenhouse_342744-504.jpg?t=st=1717108285~exp=1717111885~hmac=75034d1dff3337c47a3dc991fa930900d1e8732d909fa0f69e0586cce3056ac3&w=740"),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -49,7 +49,7 @@ class AgriScanSettingScreen extends StatelessWidget {
                         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                         child: CircleAvatar(
                           radius:60,
-                          backgroundImage: profileImage==null? AssetImage("assets/images/mohamed_nabil.jpg") as ImageProvider<Object>?:FileImage(profileImage),
+                          backgroundImage: profileImage==null? NetworkImage("https://img.freepik.com/free-photo/portrait-farmer-holding-crate-full-strawberries-fruit-greenhouse_342744-504.jpg?t=st=1717108285~exp=1717111885~hmac=75034d1dff3337c47a3dc991fa930900d1e8732d909fa0f69e0586cce3056ac3&w=740") as ImageProvider<Object>?:FileImage(profileImage),
                         ),
                       ),
                     ],
@@ -58,7 +58,7 @@ class AgriScanSettingScreen extends StatelessWidget {
                 SizedBox(
                   height: 5,
                 ),
-                Text("Mohamed Nabil",
+                Text("User",
                   style: Theme.of(context).textTheme.bodyText1!.copyWith(
                     color: kDarkGreenColor
                   ),

@@ -23,7 +23,7 @@ class AgriScanLastOrdersScreen extends StatelessWidget {
           condition:true,//AgriScanCubit.get(context).hommodel != null && AgriScanCubit.get(context).categoriesmodel != null ,
           builder:(context) => ListView.separated(
             itemBuilder: (context, index) =>productEquipbuider(context) ,
-            itemCount: 10,
+            itemCount: 4,
             separatorBuilder: (context, index) => SizedBox(height: 0,),
           ),//AgriScanCubit.get(context).hommodel as HomeModel,AgriScanCubit.get(context).categoriesmodel as CategoriesModel,context),
           fallback: (context) => Center(child: CircularProgressIndicator()),
@@ -66,7 +66,7 @@ Widget productEquipbuider( context) => GestureDetector(
               child: ClipRRect(
                 borderRadius: BorderRadius.only(topRight:Radius.circular(0),topLeft:Radius.circular(0) ),
                 child: Image(
-                  image:NetworkImage("https://img.freepik.com/free-photo/3d-render-rotavator_1048-8459.jpg?t=st=1714175326~exp=1714178926~hmac=59bc9ef9e3be7428075473034902d4a6f3ab5a17886d1871dd59589becb603ed&w=740"),
+                  image:NetworkImage("https://img.freepik.com/premium-photo/equipment-automatic-irrigation-large-field_120225-743.jpg?w=740"),
                   height: 120,
                 ),
               ),

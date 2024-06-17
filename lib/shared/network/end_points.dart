@@ -1,15 +1,15 @@
-const LOGIN='login';
+const REGISTER="/register";
 
-const HOME='home';
+const LOGIN='/login';
 
-const GET_CATORGRIES='categories';
+const PROFILE='/auth/user';
 
- const FAVORITES="favorites";
+const AvailableAppointmentsEng='/eng/available-times';
 
- const PROFILE='profile';
+const SETTIME='/eng/meetings';
 
- const REGISTER="register";
+ const UPCOMINGMEETING="/eng/meetings";
 
  const UPDATE_PROFILE="update-profile";
 
- const SEARCH='products/search';
+ const UPDATEENGDATA='/auth/update';

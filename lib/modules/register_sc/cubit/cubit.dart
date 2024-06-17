@@ -1,6 +1,7 @@
 
 import 'package:agriscan/models/register_model.dart';
 import 'package:agriscan/modules/register_sc/cubit/state.dart';
+//import 'package:agriscan/modules/register_sc/cubit/state.dart';
 import 'package:agriscan/shared/network/end_points.dart';
 import 'package:agriscan/shared/network/remote/dio_helper.dart';
 import 'package:bloc/bloc.dart';
@@ -14,12 +15,13 @@ class AgriScanRegisterCubit extends Cubit<AgriScanRegisterStates>
   AgriScanRegisterCubit():super(AgriScanRegisterInitialState());
 
 static AgriScanRegisterCubit get(context) => BlocProvider.of(context);
-  ShopRegistrMode? RegistrModel;
+  AgriScanRegistrModel? RegistrModel;
   void userRegister({
     required String name,
     required String email,
     required String password,
     required String phone,
+    required int eng,
   }
       ){
     emit(AgriScanRegisterLoadingState());
@@ -29,20 +31,21 @@ static AgriScanRegisterCubit get(context) => BlocProvider.of(context);
           'name':name,
           'email':email,
           'password':password,
-          'phone':phone,
+          'is_eng':eng
         },
     ).then((value){
-     print(value?.data);
-     RegistrModel=ShopRegistrMode.fromJson(value?.data);
-   print(RegistrModel?.status);
-     print(RegistrModel?.data?.email);
+     RegistrModel=AgriScanRegistrModel.fromJson(value?.data);
+     print(RegistrModel?.data?.user?.role);
       emit(AgriScanRegisterSuccessState(RegistrModel!));
     }).catchError((error){
-      print(error.toString());
+     print(error.toString());
+     String errorMessage = 'An error occurred';
+     if (error.response != null && error.response.data != null) {
+       errorMessage = error.response.data['message'] ?? errorMessage;
+     }
       emit(AgriScanRegisterErrorState(error.toString()));
     });
   }
-
   IconData suffix=Icons.visibility_outlined;
   bool isPassword=true;
   void changePasswordVisibility(){

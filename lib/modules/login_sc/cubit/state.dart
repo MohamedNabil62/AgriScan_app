@@ -10,7 +10,7 @@ class  AgriScanLoginInitialState extends AgriScanLoginStates{}
 class  AgriScanLoginLoadingState extends AgriScanLoginStates{}
 
 class  AgriScanLoginSuccessState extends AgriScanLoginStates{
-   final ShopLoginModel LoginModel;
+   final AgriScanLoginModel LoginModel;
 
   AgriScanLoginSuccessState(this.LoginModel);
 }

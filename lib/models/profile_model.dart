@@ -1,31 +1,32 @@
-class ShopProfileModel {
-  bool? status;
+class AgriScanDataUserModel {
+  int? success;
+  DataAgriScanDataUserModel? data;
   String? message;
-  Data? data;
-  ShopProfileModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
+  int? code;
+
+  AgriScanDataUserModel({this.success, this.data, this.message, this.code});
+
+  AgriScanDataUserModel.fromJson(Map<String, dynamic> json) {
+    success = json['success'];
+    data = json['data'] != null ? new DataAgriScanDataUserModel.fromJson(json['data']) : null;
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    code = json['code'];
   }
+
 }
 
-class Data {
+class DataAgriScanDataUserModel {
   int? id;
   String? name;
   String? email;
-  String? phone;
-  String? image;
-  int? points;
-  int? credit;
-  String? token;
-  Data.fromJson(Map<String, dynamic> json) {
+  String? role;
+
+  DataAgriScanDataUserModel({this.id, this.name, this.email, this.role});
+
+  DataAgriScanDataUserModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     email = json['email'];
-    phone = json['phone'];
-    image = json['image'];
-    points = json['points'];
-    credit = json['credit'];
-    token = json['token'];
+    role = json['role'];
   }
 }
