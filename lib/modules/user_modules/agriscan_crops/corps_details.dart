@@ -1,14 +1,21 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../shared/components/constants.dart';
 
 class PlantDetails extends StatefulWidget {
-  const PlantDetails({ Key? key}) : super(key: key);
+  final String? Des;
+  final String? path;
+  final String? name;
+
+  PlantDetails(this.Des, this.path, this.name, {Key? key}) : super(key: key);
 
   @override
   State<PlantDetails> createState() => _PlantDetailsState();
 }
+
 class _PlantDetailsState extends State<PlantDetails> {
   @override
   Widget build(BuildContext context) {
@@ -36,7 +43,6 @@ class _PlantDetailsState extends State<PlantDetails> {
                 ),
               ),
             ),
-
           ],
         ),
       ),
@@ -48,10 +54,16 @@ class _PlantDetailsState extends State<PlantDetails> {
             color: kSpiritedGreen,
             padding: const EdgeInsets.only(top: 40.0),
             child: Hero(
-              tag:'plant',
-              child: Image.asset("assets/images/growing-wheat-wind.jpg"),
+              tag: 'plant',
+              child: CachedNetworkImage(
+                imageUrl: "https://acms-testing.smaster.live/${widget.path}",
+                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
+
           Container(
             color: kSpiritedGreen,
             height: MediaQuery.of(context).size.height * 0.58,
@@ -63,84 +75,58 @@ class _PlantDetailsState extends State<PlantDetails> {
                   topRight: Radius.circular(40.0),
                 ),
               ),
-              padding:
-              const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "Wheat plant",
-                            textAlign: TextAlign.start,
-                            style: GoogleFonts.poppins(
-                              fontSize: 28.0,
-                              fontWeight: FontWeight.w600,
-                              color: kDarkGreenColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          'About',
-                          style: GoogleFonts.poppins(
-                            color: kDarkGreenColor,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                          const EdgeInsets.only(top: 0.0, bottom: 20.0),
-                          child: Text(
-                            'Selecting suitable land is crucial, fertile soil with good drainage is ideal. Prepare the land by plowing, removing weeds, and leveling it. Plant wheat early in the season for optimal growth. Regular irrigation, monitoring, and fertilization are essential for healthy crops. Harvest when wheat is mature using specialized machinery Select land with fertile soil, good drainage. Prepare by plowing, leveling, removing weeds. Plant wheat early for best growth. Regular irrigation, monitoring, fertilization crucial. Harvest when mature using specialized machinery.\n',
-                            style: GoogleFonts.poppins(
-                              color: kDarkGreenColor,
-                            ),
-                          ),
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          physics: const BouncingScrollPhysics(),
-                          clipBehavior: Clip.none,
-                          child: Row(
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              PlantMetricsWidget(
-                                title: 'Height',
-                                value: '80-120 cm',
-                                icon: Icons.height,
-                              ),
-                              PlantMetricsWidget(
-                                title: 'Humidiy',
-                                value: 'Moderate',
-                                icon: Icons.water_drop_outlined,
-                              ),
-                              PlantMetricsWidget(
-                                title: 'Width',
-                                value: '30-50 cm',
-                                icon: Icons.width_full_outlined,
+                              Text(
+                                widget.name ?? '',
+                                textAlign: TextAlign.start,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 28.0,
+                                  fontWeight: FontWeight.w600,
+                                  color: kDarkGreenColor,
+                                ),
                               ),
                             ],
                           ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 0.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              'About',
+                              style: GoogleFonts.poppins(
+                                color: kDarkGreenColor,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Html(
+                                data: widget.Des ?? '',
+                              ),
+                            ),
+                          ],
                         ),
-
-
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
@@ -151,6 +137,10 @@ class _PlantDetailsState extends State<PlantDetails> {
 }
 
 class PlantMetricsWidget extends StatelessWidget {
+  final String title;
+  final String value;
+  final IconData icon;
+
   const PlantMetricsWidget({
     required this.title,
     required this.value,
@@ -158,16 +148,27 @@ class PlantMetricsWidget extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final String title;
-  final String value;
-  final IconData icon;
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 56.0,
-      padding: const EdgeInsets.only(right: 28.0),
-      child: Row(
+      height: 80.0,
+      width: 120.0,
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 5.0,
+            spreadRadius: 1.0,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CircleAvatar(
             backgroundColor: kDarkGreenColor,
@@ -175,116 +176,23 @@ class PlantMetricsWidget extends StatelessWidget {
             child: Icon(
               icon,
               color: Colors.white,
-              size: 35.0,
+              size: 30.0,
             ),
           ),
-          const SizedBox(width: 12.0),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: GoogleFonts.poppins(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w500,
-                  color: kGreyColor,
-                ),
-              ),
-              Align(
-                child: Text(
-                  value,
-                  style: GoogleFonts.poppins(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w600,
-                    color: kDarkGreenColor,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class QuantitySelector extends StatefulWidget {
-  const QuantitySelector({
-    required this.min,
-    required this.max,
-    required this.initial,
-    required this.onChanged,
-    Key? key,
-  }) : super(key: key);
-
-  final int min;
-  final int max;
-  final int initial;
-  final Function(int) onChanged;
-
-  @override
-  State<QuantitySelector> createState() => _QuantitySelectorState();
-}
-
-class _QuantitySelectorState extends State<QuantitySelector> {
-  late int quantity;
-
-  @override
-  void initState() {
-    quantity = widget.initial;
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 32.0,
-      width: 95.0,
-      decoration: BoxDecoration(
-        color: kDarkGreenColor,
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  widget.onChanged(
-                      quantity != widget.min ? --quantity : widget.min);
-                });
-              },
-              child: const Icon(
-                Icons.remove,
-                color: Colors.white,
-                size: 18.0,
-              ),
+          Text(
+            title,
+            style: GoogleFonts.poppins(
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500,
+              color: kGreyColor,
             ),
           ),
-          Align(
-            child: Text(
-              '$quantity',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16.0,
-              ),
-            ),
-          ),
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  widget.onChanged(
-                      quantity != widget.max ? ++quantity : widget.max);
-                });
-              },
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 18.0,
-              ),
+          Text(
+            value,
+            style: GoogleFonts.poppins(
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+              color: kDarkGreenColor,
             ),
           ),
         ],
@@ -297,13 +205,11 @@ class StarRating extends StatelessWidget {
   final int scale;
   final double stars;
   final Color? color;
-  final double? size;
   final Function(double)? onChanged;
 
   const StarRating({
     this.scale = 5,
     this.stars = 0.0,
-    this.size,
     this.color = Colors.orange,
     this.onChanged,
     Key? key,
@@ -323,7 +229,7 @@ class StarRating extends StatelessWidget {
       child: Icon(
         icon,
         color: color,
-        size: size,
+        size: 30.0,
       ),
     );
   }
@@ -331,6 +237,7 @@ class StarRating extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         scale,
             (index) => buildStar(context, index),

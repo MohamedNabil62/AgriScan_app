@@ -60,6 +60,9 @@ dependencies:
   flutter_spinkit: ^5.0.0
   flutter_typeahead:
   url_launcher: ^6.0.0
+  flutter_html: ^2.1.4
+  image: ^3.0.1
+
 
 
 
@@ -87,6 +90,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/diseases.json
   fonts:
     - family: Jannah
       fonts:

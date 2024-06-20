@@ -20,13 +20,16 @@ class DataAgriScanDataUserModel {
   String? name;
   String? email;
   String? role;
+  int? balance;
 
-  DataAgriScanDataUserModel({this.id, this.name, this.email, this.role});
+  DataAgriScanDataUserModel({this.id, this.name, this.email, this.role, this.balance});
 
   DataAgriScanDataUserModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     email = json['email'];
     role = json['role'];
+    balance = json['balance'];
   }
+
 }

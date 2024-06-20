@@ -1,21 +1,18 @@
 // ignore_for_file: prefer_const_constructors, prefer_typing_uninitialized_variables
-
-
 import 'package:agriscan/layout/agriscan_layout.dart';
 import 'package:agriscan/layout/cubit/cubit.dart';
 import 'package:agriscan/layout/cubit/state.dart';
 import 'package:agriscan/shared/bloc_observre.dart';
-import 'package:agriscan/shared/components/components.dart';
 import 'package:agriscan/shared/components/constants.dart';
 import 'package:agriscan/shared/network/local/cache_helper.dart';
 import 'package:agriscan/shared/network/remote/dio_helper.dart';
 import 'package:agriscan/shared/styles/theme-data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'layout/cubit_eng/cubit.dart';
 import 'modules/engineer_modules/agriscan_home_engineer/home_screen.dart';
 import 'modules/login_sc/login_screen.dart';
+import 'modules/user_modules/agriscan_cart/cuibt/cuibt.dart';
 bool userDataCheck=false;
 Future main() async{
   //يتاكد ان كل حاجه هنا  في الفانكشن خلصت وبعد كده يفتح الابلكيشن
@@ -51,11 +48,13 @@ class MyApp extends StatelessWidget
     return  MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => AgriScanCubit()..getToken()
+            create: (context) => AgriScanCubit()..getToken()..getListEng()..getPlantData()..getProdect()..getOrder()..getUpCoingUser()
           ),
           BlocProvider(
-              create: (context) => EngAgriScanCubit()..getAvailableAppointmentsEng()
+              create: (context) => EngAgriScanCubit()..getAvailableAppointmentsEng()..getAmount()
           ),
+          BlocProvider(
+              create: (context) => CartCubit(),)
         ],
         child:BlocConsumer<AgriScanCubit,AgriScanStates>(
             listener:(context, state) =>{

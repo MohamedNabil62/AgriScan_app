@@ -1,13 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../layout/cubit/cubit.dart';
 import '../../../layout/cubit/state.dart';
+import '../../../models_user/prodect_model.dart';
 import '../../../shared/components/components.dart';
 import '../../../shared/components/constants.dart';
-import '../agriscan_cart/last_orders.dart';
+import 'last_orders.dart';
 import 'equip_details.dart';
 
 class AgriScanFarmEquipScreen extends StatelessWidget {
@@ -18,18 +21,22 @@ class AgriScanFarmEquipScreen extends StatelessWidget {
     return BlocConsumer<AgriScanCubit,AgriScanStates>(
       builder:(context, state) =>Scaffold(
           body:ConditionalBuilder(
-        condition:true,//AgriScanCubit.get(context).hommodel != null && AgriScanCubit.get(context).categoriesmodel != null ,
+        condition:AgriScanCubit.get(context).modelProdect != null,
         builder:(context) => ListView.separated(
-          itemBuilder: (context, index) =>productEquipbuider(context) ,
-          itemCount: 7,
+          itemBuilder: (context, index) =>productEquipbuider(context,AgriScanCubit.get(context).modelProdect!.data![index]) ,
+          itemCount: AgriScanCubit.get(context).modelProdect!.data!.length,
           separatorBuilder: (context, index) => SizedBox(height: 0,),
-        ),//AgriScanCubit.get(context).hommodel as HomeModel,AgriScanCubit.get(context).categoriesmodel as CategoriesModel,context),
-        fallback: (context) => Center(child: CircularProgressIndicator()),
+        ),
+        fallback: (context) => Center(
+          child: SpinKitFadingCircle(
+            color: Colors.green,
+            size: 50,
+          ),
+        ),
       ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             nevgitto(context, AgriScanLastOrdersScreen());
-            print('Floating Action Button pressed!');
           },
           label: Text('Orders'), // Text to display inside the button
           icon: Icon(Icons.shopping_cart), // Icon to display before the label
@@ -43,94 +50,88 @@ class AgriScanFarmEquipScreen extends StatelessWidget {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat, // Change the location of the button if needed
       ),
       listener: (context, state) {
-        /*
-        if(state is AgriScanSuccessFavoritesDataState)
-        {
-          if(!state.model.status)
-          {
-            showToast(
-                text:state.model.message,
-                state:ToastState.ERROR
-            );
-          }
-        }
-
-         */
       },
     );
   }
 }
-Widget productEquipbuider( context) => GestureDetector(
-  onTap:(){
-    nevgitto(context,  EquipmentDetails());
+Widget productEquipbuider(BuildContext context, DataModelProdect dataModelProdect) => GestureDetector(
+  onTap: () {
+    nevgitto(context, EquipmentDetails(
+      dataModelProdect.name,
+      dataModelProdect.description,
+      dataModelProdect.cover,
+      dataModelProdect.price,
+      dataModelProdect.id
+    ));
   },
   child: Padding(
     padding: const EdgeInsets.all(8.0),
     child: Container(
       decoration: BoxDecoration(
         color: kGinColor,
-        borderRadius: BorderRadius.circular(0.0),
+        borderRadius: BorderRadius.circular(12.0),
       ),
-      child: Container(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(0.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(topRight:Radius.circular(0),topLeft:Radius.circular(0) ),
-                child: Image(
-                  image:NetworkImage("https://img.freepik.com/premium-photo/equipment-automatic-irrigation-large-field_120225-743.jpg?w=740"),
-                      height: 120,
-                ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(12), bottomLeft: Radius.circular(12)),
+            child: CachedNetworkImage(
+              imageUrl: "https://acms-testing.smaster.live/${dataModelProdect.cover}",
+              width: 100, // Adjust width as needed
+              height: 100, // Adjust height as needed
+              placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+              fit: BoxFit.cover,
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Name: ${dataModelProdect.name}",
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
+                    style: GoogleFonts.poppins(
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
+                      color: kDarkGreenColor,
+                    ),
+                  ),
+                  SizedBox(height: 7),
+                  Text(
+                    "Description: ${dataModelProdect.description}",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
+                    style: GoogleFonts.poppins(
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
+                      color: kDarkGreenColor,
+                    ),
+                  ),
+                  SizedBox(height: 7),
+                  Text(
+                    "Price: ${dataModelProdect.price}\$",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
+                    style: GoogleFonts.poppins(
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
+                      color: kDarkGreenColor,
+                    ),
+                  ),
+                ],
               ),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Name: automatic irrigation ",
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.start,
-                      style: GoogleFonts.poppins(
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
-                        color: kDarkGreenColor,
-                      ),
-                    ),
-                    SizedBox(height: 7,),
-                    Text("Des: Equipment for automatic irrigation of a large field",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.start,
-                      style: GoogleFonts.poppins(
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
-                        color: kDarkGreenColor,
-                      ),
-                    ),
-                    SizedBox(height: 7,),
-                    Text("Peice: 10K\$",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.start,
-                      style: GoogleFonts.poppins(
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
-                        color: kDarkGreenColor,
-                      ),
-                    ),
-                  ],),
-              ),
-            )
-
-          ],
-        ),
+          ),
+        ],
       ),
-
     ),
   ),
 );

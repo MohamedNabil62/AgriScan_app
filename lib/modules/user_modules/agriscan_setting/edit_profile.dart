@@ -19,178 +19,130 @@ class EditProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AgriScanCubit,AgriScanStates>(
-        builder:(context, state) {
-         //var usermodel=SocailCubit.get(context).mode;
-          var profileImage=AgriScanCubit.get(context).profileImage;
+      builder:(context, state) {
+        //var usermodel=SocailCubit.get(context).mode;
+        var profileImage=AgriScanCubit.get(context).profileImage;
         //  var coverImage=SocailCubit.get(context).coverImage;
-          namecontroller.text='User';
-          biocontroller.text='bio....';
-          phonecontroller.text='8239789232';
-          return  Scaffold(
-            appBar: AppBar(
-              title: const Text(
-                "Edit Profile",
-                style: TextStyle(color: Colors.white),
-              ),
-              leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  IconBroken.Arrow___Left_2,
-                  color: Colors.white,
-                ),
-              ),
-              backgroundColor: kDarkGreenColor,
-              actions: [
-                TextButton(onPressed: (){}, child: Text("update".toUpperCase(),
-                  style: TextStyle(
-                      color: Colors.white
-                  ),
-                ),
-                ),
-                SizedBox(width: 15,)
-              ],
+        namecontroller.text=AgriScanCubit.get(context).agriScanDataUserModel!.data!.name!;
+        biocontroller.text=AgriScanCubit.get(context).agriScanDataUserModel!.data!.email!;
+        phonecontroller.text='9745993267';
+        return  Scaffold(
+          appBar:  AppBar(
+            title: const Text(
+              "Edit Profile",
+              style: TextStyle(color: Colors.white),
             ),
-            body: SingleChildScrollView(
-              child: Column(children: [
-                if(false)
-                  LinearProgressIndicator(),
-                Container(
-                  height: 230,
-                  child: Stack(
-                    alignment: AlignmentDirectional.bottomCenter,
-                    children: [
-                      Align(
-                        alignment: AlignmentDirectional.topCenter,
-                        child: Stack(
-                          alignment: AlignmentDirectional.topEnd,
-                          children: [
-                            Container(
-                              height: 190,
-                              width: double.infinity,
-                              decoration:  BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(4),
-                                      topRight:  Radius.circular(4)
-                                  ),
-                                  image: DecorationImage(
-                                    image:NetworkImage("https://img.freepik.com/free-photo/portrait-farmer-holding-crate-full-strawberries-fruit-greenhouse_342744-504.jpg?t=st=1717108285~exp=1717111885~hmac=75034d1dff3337c47a3dc991fa930900d1e8732d909fa0f69e0586cce3056ac3&w=740"),
-                                    fit: BoxFit.cover,
-                                  )
-                              ),
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                IconBroken.Arrow___Left_2,
+                color: Colors.white,
+              ),
+            ),
+            backgroundColor: kDarkGreenColor,
+            actions: [
+              TextButton(onPressed: (){
+                AgriScanCubit.get(context).upDateEngDat(name:  namecontroller.text, email: biocontroller.text);
+              }, child: Text("update".toUpperCase(),
+                style: TextStyle(
+                    color: Colors.white
+                ),
+              ),
+              ),
+              SizedBox(width: 15,)
+            ],
+          ),
+          body: SingleChildScrollView(
+            child: Column(children: [
+              if(state is AgriScanLoadingUpdateUserDataState)
+                LinearProgressIndicator(),
+              SizedBox(
+                height: 0,
+              ),
+              Container(
+                height: 230,
+                child: Stack(
+                  alignment: AlignmentDirectional.bottomCenter,
+                  children: [
+                    Align(
+                      alignment: AlignmentDirectional.topCenter,
+                      child: Stack(
+                        alignment: AlignmentDirectional.topEnd,
+                        children: [
+                          Container(
+                            height: 190,
+                            width: double.infinity,
+                            decoration:  BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(4),
+                                    topRight:  Radius.circular(4)
+                                ),
+                                image: DecorationImage(
+                                  image:NetworkImage("https://img.freepik.com/premium-photo/plowing-sowing-maize-field-with-tractor_69477-55.jpg?w=360"),
+                                  fit: BoxFit.cover,
+                                )
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 6.0,right: 6),
-                              child: CircleAvatar(
-                                radius: 20,
-                                backgroundColor: myColor,
-                                child: IconButton(onPressed: (){
-                                  //SocailCubit.get(context).getCoverImage();
-                                },
-                                    icon:Icon(
-                                      IconBroken.Camera,
-                                      size: 16,
-                                      color: Colors.white,
-                                    ),
+                          ),
+                          /*
+                          Padding(
+                            padding: const EdgeInsets.only(top: 6.0,right: 6),
+                            child: CircleAvatar(
+                              radius: 20,
+                              backgroundColor: myColor,
+                              child: IconButton(onPressed: (){
+                                //SocailCubit.get(context).getCoverImage();
+                              },
+                                icon:Icon(
+                                  IconBroken.Camera,
+                                  size: 16,
+                                  color: Colors.white,
                                 ),
                               ),
-                            )
-                          ],
-                        ),
-                      ),
-                   Stack(
-                     alignment: AlignmentDirectional.bottomEnd,
-                     children: [
-                       CircleAvatar(
-                         radius: 64,
-                         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                         child: CircleAvatar(
-                           radius:60,
-                           backgroundImage:profileImage==null? NetworkImage('https://img.freepik.com/free-photo/portrait-farmer-holding-crate-full-strawberries-fruit-greenhouse_342744-504.jpg?t=st=1717108285~exp=1717111885~hmac=75034d1dff3337c47a3dc991fa930900d1e8732d909fa0f69e0586cce3056ac3&w=740') as ImageProvider<Object>?:FileImage(profileImage),
-                         ),
-                       ),
-                       CircleAvatar(
-                         radius: 20,
-                         backgroundColor: myColor,
-                         child: IconButton(onPressed: (){
-                          // SocailCubit.get(context).getProfileImage();
-                         },
-                           icon:Icon(
-                             IconBroken.Camera,
-                             size: 16,
-                             color: Colors.white,
-                           ),
-                         ),
-                       )
-                     ],
-                   )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                /*
-                if(SocailCubit.get(context).profileImage!=null||SocailCubit.get(context).coverImage!=null)
-                Padding(
-                  padding: const EdgeInsets.all(14),
-                  child: Row(
-                    children: [
-                      if(SocailCubit.get(context).profileImage!=null)
-                      Expanded(
-                        child: Column(
-                          children: [
-                            defaultbutton(
-                                function: (){
-                                  SocailCubit.get(context).uploadingProfileImage(name: namecontroller.text, bio: biocontroller.text, phone: phonecontroller.text,);
-                                },
-                                text: 'upload profile',
-                              colo: myColor
                             ),
-                            if(state is SocailUpdateLoadingState)
-                            SizedBox(
-                              height: 5,
-                            ),
-                            if(state is SocailUpdateLoadingState)
-                            LinearProgressIndicator()
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      if(SocailCubit.get(context).coverImage!=null)
-                      Expanded(
-                        child: Column(
-                          children: [
-                            defaultbutton(
-                                function: (){
-                                  SocailCubit.get(context).uploadingCoverImage(name: namecontroller.text, bio: biocontroller.text, phone: phonecontroller.text);
-                                },
-                                text: 'upload cover',
+                          )
 
-                                colo: myColor
-                            ),
-                            if(state is SocailUpdateLoadingState)
-                            SizedBox(
-                              height: 5,
-                            ),
-                            if(state is SocailUpdateLoadingState)
-                            LinearProgressIndicator()
-                          ],
-                        ),
+                           */
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                if(SocailCubit.get(context).profileImage!=null||SocailCubit.get(context).coverImage!=null)
-                SizedBox(
-                  height: 4,
-                ),
+                    ),
+                    Stack(
+                      alignment: AlignmentDirectional.bottomEnd,
+                      children: [
+                        CircleAvatar(
+                          radius: 64,
+                          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                          child: CircleAvatar(
+                            radius:60,
+                            backgroundImage:profileImage==null? NetworkImage("https://img.freepik.com/free-photo/senior-man-working-field-with-vegetables_329181-12425.jpg?t=st=1718673579~exp=1718677179~hmac=fa44deb322cfd56c7eb66ed7de36e50092e3a25d28e3e93be5604a1eba3060bd&w=360") as ImageProvider<Object>?:FileImage(profileImage),
+                          ),
+                        ),
+                        /*
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: myColor,
+                          child: IconButton(onPressed: (){
+                            // SocailCubit.get(context).getProfileImage();
+                          },
+                            icon:Icon(
+                              IconBroken.Camera,
+                              size: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
 
-                 */
-                Padding(
+                         */
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
                 padding: const EdgeInsets.all(14.0),
                 child: Form(
                   key: formkey,
@@ -217,22 +169,32 @@ class EditProfileScreen extends StatelessWidget {
                       const SizedBox(height: 10),
                       TextFormField(
                         controller: biocontroller,
-                        keyboardType: TextInputType.text,
+                        keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return ("bio must not be empty");
+                            return ("email must not be empty");
+                          }
+                          if (value.isNotEmpty) {
+                            for(int x=0;x<value.length;x++)
+                            {
+                              if(value[x]=='@' && value[x+1] !=''){
+                                return null;
+                              }
+                            }
+                            return ("The email must be a valid email address");
                           }
                           return null;
                         },
-                        decoration: InputDecoration(prefixIcon: const Icon(IconBroken.Info_Circle),
-                            labelText: "Bio",
+                        decoration: InputDecoration(prefixIcon: const Icon(Icons.email_outlined),
+                            labelText: "Email",
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(0))
                         ),
                       ),
+                      /*
                       const SizedBox(height: 10),
                       TextFormField(
-                        controller: phonecontroller,
+                        controller: phonecontrollerEngineer,
                         keyboardType: TextInputType.phone,
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -247,15 +209,23 @@ class EditProfileScreen extends StatelessWidget {
 
                         ),
                       ),
+
+                       */
                     ],
                   ),
                 ),
               )
-              ],),
-            ),
-          );
-        },
-        listener:(context, state) {},
+            ],),
+          ),
+        );
+      },
+      listener:(context, state) {
+        if(state is AgriScanSuccessUpdateUserDataState)
+        {
+          //AgriScanCubit.get(context).getToken();
+        }
+      },
     );
   }
 }
+

@@ -42,3 +42,29 @@ class EngAgriScanStateErrorUpComingMeeting extends EngAgriScanStates{
   EngAgriScanStateErrorUpComingMeeting(this.error);
 
 }
+
+//amount
+
+class EngAgriScanStateSuccessAmount extends EngAgriScanStates{}
+
+class EngAgriScanStateLoadingAmount  extends EngAgriScanStates{}
+
+class EngAgriScanStateErrorAmount  extends EngAgriScanStates{
+
+  final String error;
+  EngAgriScanStateErrorAmount (this.error);
+
+}
+
+//new rq
+
+class EngAgriScanStateSuccessNewR extends EngAgriScanStates{}
+
+class EngAgriScanStateLoadingNewR  extends EngAgriScanStates{}
+
+class EngAgriScanStateErrorNewR  extends EngAgriScanStates{
+
+  final String error;
+  EngAgriScanStateErrorNewR (this.error);
+
+}

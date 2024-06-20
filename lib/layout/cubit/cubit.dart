@@ -1,6 +1,14 @@
 import 'package:agriscan/layout/cubit/state.dart';
+import 'package:agriscan/layout/cubit_eng/cubit.dart';
+import 'package:agriscan/models/ModelAvailableAppointmentsEng.dart';
 import 'package:agriscan/models/UdataEngData.dart';
 import 'package:agriscan/models/profile_model.dart';
+import 'package:agriscan/models_user/List_eng.dart';
+import 'package:agriscan/models_user/model_creat_meeting.dart';
+import 'package:agriscan/models_user/model_upcoming_meeting_user.dart';
+import 'package:agriscan/models_user/order_model.dart';
+import 'package:agriscan/models_user/plant_model.dart';
+import 'package:agriscan/models_user/prodect_model.dart';
 import 'package:agriscan/shared/components/components.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
@@ -10,6 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import '../../models_user/model_time.dart';
 import '../../modules/user_modules/agriscan_ai/agriscan_ai_screen.dart';
 import '../../modules/user_modules/agriscan_crops/corps_screen.dart';
 import '../../modules/user_modules/agriscan_engineer/agriscan_engineer_screen.dart';
@@ -132,4 +141,273 @@ void upDateEngDat({
     }
   });
 }
-}}
+}
+
+ModelListEng? modelListEng;
+void getListEng()
+{
+  emit(AgriScanStateLoadingListEng());
+
+  if (token != null) {
+    String tto = 'Bearer $token'; // Ensure tto is initialized correctly
+
+    Diohelper.get(
+      url:  LISTENG,
+      token: tto,
+    ).then((value) {
+      modelListEng=ModelListEng.fromJson(value.data);
+      emit(AgriScanStateSuccessListEng());
+    }).catchError((error) {
+      if (error is DioError) {
+        if (error.response != null) {
+          print('Error Response: ${error.response!.data}');
+          print('Error Status Code: ${error.response!.statusCode}');
+        } else {
+          print('Error Message: ${error.message}');
+        }
+      } else {
+        print('Unexpected Error: ${error.toString()}');
+      }
+      emit(AgriScanStateErrorListEng(error.toString()));
+    });
+  } else {
+    print('Token is null');
+    emit(AgriScanStateErrorListEng('Token is null'));
+  }
+}
+
+ModelAvailableAppointmentsUser? modelAvailableAppointmentsUser;
+void timeEng(int id)
+{
+  emit(AgriScanStateLoadingTimeUser());
+
+  if (token != null) {
+    String tto = 'Bearer $token'; // Ensure tto is initialized correctly
+
+    Diohelper.get(
+      url:  '/users/engs/${id}/available-times',
+      token: tto,
+    ).then((value) {
+      modelAvailableAppointmentsUser=ModelAvailableAppointmentsUser.fromJson(value.data);
+      if (modelAvailableAppointmentsUser!.data.isNotEmpty) {
+        modelAvailableAppointmentsUser?.data.forEach((date, appointments) {
+          print('Date: $date');
+          for (var appointment in appointments) {
+            print('Appointment ID: ${appointment.id}, Time: ${appointment.time}');
+          }
+        });
+      } else {
+        print('No appointments available.'); // Handle case where data is empty
+      }
+      emit(AgriScanStateSuccessTimeUser());
+    }).catchError((error) {
+      if (error is DioError) {
+        if (error.response != null) {
+          print('Error Response: ${error.response!.data}');
+          print('Error Status Code: ${error.response!.statusCode}');
+        } else {
+          print('Error Message: ${error.message}');
+        }
+      } else {
+        print('Unexpected Error: ${error.toString()}');
+      }
+      emit(AgriScanStateErrorTimeUser(error.toString()));
+    });
+  } else {
+    print('Token is null');
+    emit(AgriScanStateErrorTimeUser('Token is null'));
+  }
+}
+
+ModelCreate? modelCreate;
+int? bo;
+void creatMeeting(int id,int y)
+{
+  emit(AgriScanStateLoadingCreat());
+
+  if (token != null) {
+    String tto = 'Bearer $token'; // Ensure tto is initialized correctly
+
+    Diohelper.get(
+      url:  '/users/create-meeting/$id',
+      token: tto,
+    ).then((value) {
+      modelCreate=ModelCreate.fromJson(value.data);
+      print(modelCreate?.success);
+      timeEng(y);
+      emit(AgriScanStateSuccessCreat());
+    }).catchError((error) {
+      if (error is DioError) {
+        if (error.response != null) {
+          print('Error Response: ${error.response!.data}');
+          print('Error Status Code: ${error.response!.statusCode}');
+        } else {
+          print('Error Message: ${error.message}');
+        }
+      } else {
+        print('Unexpected Error: ${error.toString()}');
+      }
+      emit(AgriScanStateErrorCreat(error.toString()));
+    });
+  } else {
+    print('Token is null');
+    emit(AgriScanStateErrorCreat('Token is null'));
+  }
+}
+ModelUpComingMeetingUser? modelUpComingMeetingUser;
+void getUpCoingUser(){
+  emit(AgriScanStateLoadingComingMeetingUser());
+
+  if (token != null) {
+    String tto = 'Bearer $token'; // Ensure tto is initialized correctly
+
+    Diohelper.get(
+      url:  UPCOMING,
+      token: tto,
+    ).then((value) {
+      modelUpComingMeetingUser=ModelUpComingMeetingUser.fromJson(value.data);
+      emit(AgriScanStateSuccessComingMeetingUser());
+    }).catchError((error) {
+      if (error is DioError) {
+        if (error.response != null) {
+          print('Error Response: ${error.response!.data}');
+          print('Error Status Code: ${error.response!.statusCode}');
+        } else {
+          print('Error Message: ${error.message}');
+        }
+      } else {
+        print('Unexpected Error: ${error.toString()}');
+      }
+      emit(AgriScanStateErrorComingMeetingUser(error.toString()));
+    });
+  } else {
+    print('Token is null');
+    emit(AgriScanStateErrorComingMeetingUser('Token is null'));
+  }
+}
+ModelPlant? modelPlant;
+  void getPlantData() {
+    emit(AgriScanStateLoadingPlantData());
+
+    Diohelper.get(
+      url: PLANT,
+    ).then((value) {
+      modelPlant = ModelPlant.fromJson(value.data);
+      print(modelPlant?.data);
+      emit(AgriScanStateSuccessPlantData());
+    }).catchError((error) {
+      String errorMessage;
+
+      if (error is DioError) {
+        if (error.response != null) {
+          // Server responded with an error
+          print('Error Response: ${error.response!.data}');
+          print('Error Status Code: ${error.response!.statusCode}');
+
+          switch (error.response!.statusCode) {
+            case 400:
+              errorMessage = 'Bad request. Please try again.';
+              break;
+            case 404:
+              errorMessage = 'Resource not found. Please check the URL.';
+              break;
+            case 500:
+              errorMessage = 'Server error. Please try again later.';
+              break;
+            default:
+              errorMessage = 'Unexpected error: ${error.response!.statusCode}';
+          }
+        } else {
+          // Error setting up or sending the request
+          print('Error Message: ${error.message}');
+          errorMessage = 'Network error: ${error.message}';
+        }
+      } else {
+        // Unexpected error
+        print('Unexpected Error: ${error.toString()}');
+        errorMessage = 'Unexpected error: ${error.toString()}';
+      }
+
+      emit(AgriScanStateErrorPlantData(errorMessage));
+    });
+  }
+ ModelProdect? modelProdect;
+  void getProdect()
+  {
+    emit(AgriScanStateLoadingProdecttData());
+
+    Diohelper.get(
+      url: PRODECT,
+    ).then((value) {
+      modelProdect=ModelProdect.fromJson(value.data);
+      emit(AgriScanStateSuccessProdecttData());
+    }).catchError((error) {
+      String errorMessage;
+
+      if (error is DioError) {
+        if (error.response != null) {
+          // Server responded with an error
+          print('Error Response: ${error.response!.data}');
+          print('Error Status Code: ${error.response!.statusCode}');
+
+          switch (error.response!.statusCode) {
+            case 400:
+              errorMessage = 'Bad request. Please try again.';
+              break;
+            case 404:
+              errorMessage = 'Resource not found. Please check the URL.';
+              break;
+            case 500:
+              errorMessage = 'Server error. Please try again later.';
+              break;
+            default:
+              errorMessage = 'Unexpected error: ${error.response!.statusCode}';
+          }
+        } else {
+          // Error setting up or sending the request
+          print('Error Message: ${error.message}');
+          errorMessage = 'Network error: ${error.message}';
+        }
+      } else {
+        // Unexpected error
+        print('Unexpected Error: ${error.toString()}');
+        errorMessage = 'Unexpected error: ${error.toString()}';
+      }
+
+      emit(AgriScanStateErrorProdecttData(errorMessage));
+    });
+  }
+  ModelOrder? modelOrder;
+  void getOrder()
+  {
+    emit(AgriScanStateLoadingOrder());
+
+    if (token != null) {
+      String tto = 'Bearer $token'; // Ensure tto is initialized correctly
+
+      Diohelper.get(
+        url:  ORDER,
+        token: tto,
+      ).then((value) {
+       modelOrder=ModelOrder.fromJson(value.data);
+        emit(AgriScanStateSuccessOrder());
+      }).catchError((error) {
+        if (error is DioError) {
+          if (error.response != null) {
+            print('Error Response: ${error.response!.data}');
+            print('Error Status Code: ${error.response!.statusCode}');
+          } else {
+            print('Error Message: ${error.message}');
+          }
+        } else {
+          print('Unexpected Error: ${error.toString()}');
+        }
+        emit(AgriScanStateErrorOrder(error.toString()));
+      });
+    } else {
+      print('Token is null');
+      emit(AgriScanStateErrorOrder('Token is null'));
+    }
+  }
+}
+

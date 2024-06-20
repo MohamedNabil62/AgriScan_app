@@ -1,6 +1,9 @@
 import 'package:agriscan/layout/cubit/state.dart';
 import 'package:agriscan/layout/cubit_eng/state.dart';
+import 'package:agriscan/models/Model_new.dart';
+import 'package:agriscan/models/model_amount.dart';
 import 'package:agriscan/models/upComingMeeting.dart';
+import 'package:agriscan/shared/components/components.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -141,5 +144,78 @@ class EngAgriScanCubit extends Cubit<EngAgriScanStates> {
       emit(EngAgriScanStateErrorUpComingMeeting('Token is null'));
     }
   }
+  ModelAmount? modelAmount;
+  void getAmount()
+  {
+    emit(EngAgriScanStateLoadingAmount());
+
+    if (token != null) {
+      String tto = 'Bearer $token'; // Ensure tto is initialized correctly
+
+      Diohelper.get(
+        url: AMOUNT,
+        token: tto,
+      ).then((value) {
+       modelAmount=ModelAmount.fromJson(value.data);
+        emit(EngAgriScanStateSuccessAmount());
+      }).catchError((error) {
+        if (error is DioError) {
+          if (error.response != null) {
+            print('Error Response: ${error.response!.data}');
+            print('Error Status Code: ${error.response!.statusCode}');
+          } else {
+            print('Error Message: ${error.message}');
+          }
+        } else {
+          print('Unexpected Error: ${error.toString()}');
+        }
+        emit(EngAgriScanStateErrorAmount(error.toString()));
+      });
+    } else {
+      print('Token is null');
+      emit(EngAgriScanStateErrorAmount('Token is null'));
+    }
+  }
+  ModelNewRqust? modelNewRqust;
+  void newRqu({
+    String? det,
+    String? mothed,
+    String? amount,
+  }) {
+    emit(EngAgriScanStateLoadingNewR());
+    if (token != null) {
+      String tto = 'Bearer $token';
+      Diohelper.postData(
+        url: NEW,
+        token: tto,
+        data: {
+          'details': det,
+          'method': mothed,
+          'amount': amount,
+        },
+      ).then((value) {
+        modelNewRqust = ModelNewRqust.fromJson(value!.data);
+        showToast(text:modelNewRqust?.message as String , state: ToastState.SUCCESS);
+        print(modelNewRqust?.message);
+        emit(EngAgriScanStateSuccessNewR());
+      }).catchError((error) {
+        if (error is DioError) {
+          if (error.response?.statusCode == 400) {
+            var errorMessage = error.response?.data['message'];
+            showToast(text: errorMessage , state: ToastState.ERROR);
+            print('Validation Error: $errorMessage');
+            emit(EngAgriScanStateErrorNewR('Validation Error: $errorMessage'));
+          } else {
+            print('Dio Error: ${error.message}');
+            emit(EngAgriScanStateErrorNewR('Dio Error: ${error.message}'));
+          }
+        } else {
+          print('Unexpected Error: ${error.toString()}');
+          emit(EngAgriScanStateErrorNewR('Unexpected Error: ${error.toString()}'));
+        }
+      });
+    }
+  }
+
 }
 

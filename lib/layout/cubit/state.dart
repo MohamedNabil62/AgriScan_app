@@ -37,3 +37,85 @@ class AgriScanErrorUpdateUserDataState extends AgriScanStates{
 class AgriScanLoadingUpdateUserDataState extends AgriScanStates{}
 
 class AgriScanSuccessUpdateUserDataState extends AgriScanStates{}
+
+//list eng
+
+class AgriScanStateErrorListEng extends AgriScanStates{
+
+  final String error;
+  AgriScanStateErrorListEng(this.error);
+}
+
+class AgriScanStateLoadingListEng extends AgriScanStates{}
+
+class AgriScanStateSuccessListEng extends AgriScanStates{}
+
+//time
+
+class AgriScanStateErrorTimeUser extends AgriScanStates{
+
+  final String error;
+  AgriScanStateErrorTimeUser(this.error);
+}
+
+class AgriScanStateLoadingTimeUser extends AgriScanStates{}
+
+class AgriScanStateSuccessTimeUser extends AgriScanStates{}
+
+//create meeting
+
+class AgriScanStateErrorCreat extends AgriScanStates{
+
+  final String error;
+  AgriScanStateErrorCreat(this.error);
+}
+
+class AgriScanStateLoadingCreat extends AgriScanStates{}
+
+class AgriScanStateSuccessCreat extends AgriScanStates{}
+
+//plant
+
+class AgriScanStateErrorPlantData extends AgriScanStates{
+
+  final String error;
+  AgriScanStateErrorPlantData(this.error);
+}
+
+class AgriScanStateLoadingPlantData extends AgriScanStates{}
+
+class AgriScanStateSuccessPlantData extends AgriScanStates{}
+
+//prodect
+
+class AgriScanStateErrorProdecttData extends AgriScanStates{
+
+  final String error;
+  AgriScanStateErrorProdecttData(this.error);
+}
+
+class AgriScanStateLoadingProdecttData extends AgriScanStates{}
+
+class AgriScanStateSuccessProdecttData extends AgriScanStates{}
+
+//order
+class AgriScanStateErrorOrder extends AgriScanStates{
+
+  final String error;
+  AgriScanStateErrorOrder(this.error);
+}
+
+class AgriScanStateLoadingOrder extends AgriScanStates{}
+
+class AgriScanStateSuccessOrder extends AgriScanStates{}
+
+//upcoming meeting user
+class AgriScanStateErrorComingMeetingUser extends AgriScanStates{
+
+  final String error;
+  AgriScanStateErrorComingMeetingUser(this.error);
+}
+
+class AgriScanStateLoadingComingMeetingUser extends AgriScanStates{}
+
+class AgriScanStateSuccessComingMeetingUser extends AgriScanStates{}

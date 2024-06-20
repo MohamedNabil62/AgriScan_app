@@ -1,11 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../layout/cubit/cubit.dart';
 import '../../../layout/cubit/state.dart';
+import '../../../models_user/order_model.dart';
 import '../../../shared/components/constants.dart';
 
 
@@ -20,34 +23,27 @@ class AgriScanLastOrdersScreen extends StatelessWidget {
           title: Text("Orders"),
         ),
         body:ConditionalBuilder(
-          condition:true,//AgriScanCubit.get(context).hommodel != null && AgriScanCubit.get(context).categoriesmodel != null ,
+          condition:AgriScanCubit.get(context).modelOrder != null && AgriScanCubit.get(context).modelOrder!.data!.orders!.isNotEmpty,
           builder:(context) => ListView.separated(
-            itemBuilder: (context, index) =>productEquipbuider(context) ,
-            itemCount: 4,
+            itemBuilder: (context, index) =>productEquipbuider(context,AgriScanCubit.get(context).modelOrder!.data!.orders![0].orderItems![index]) ,
+            itemCount: AgriScanCubit.get(context).modelOrder!.data!.orders![0].orderItems!.length,
             separatorBuilder: (context, index) => SizedBox(height: 0,),
           ),//AgriScanCubit.get(context).hommodel as HomeModel,AgriScanCubit.get(context).categoriesmodel as CategoriesModel,context),
-          fallback: (context) => Center(child: CircularProgressIndicator()),
+          fallback: (context) => Center(
+            child: SpinKitFadingCircle(
+              color: Colors.green,
+              size: 50,
+            ),
+          ),
         ),
       ),
       listener: (context, state) {
-        /*
-        if(state is AgriScanSuccessFavoritesDataState)
-        {
-          if(!state.model.status)
-          {
-            showToast(
-                text:state.model.message,
-                state:ToastState.ERROR
-            );
-          }
-        }
 
-         */
       },
     );
   }
 }
-Widget productEquipbuider( context) => GestureDetector(
+Widget productEquipbuider( context,OrderItemsModelOrder orderItemsModelOrder) => GestureDetector(
   onTap:(){
   },
   child: Padding(
@@ -61,13 +57,17 @@ Widget productEquipbuider( context) => GestureDetector(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
+           Padding(
               padding: EdgeInsets.all(0.0),
               child: ClipRRect(
                 borderRadius: BorderRadius.only(topRight:Radius.circular(0),topLeft:Radius.circular(0) ),
-                child: Image(
-                  image:NetworkImage("https://img.freepik.com/premium-photo/equipment-automatic-irrigation-large-field_120225-743.jpg?w=740"),
-                  height: 120,
+                child: CachedNetworkImage(
+                  imageUrl: "https://acms-testing.smaster.live/${orderItemsModelOrder.product!.cover}",
+                  width: 100, // Adjust width as needed
+                  height: 100, // Adjust height as needed
+                  placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
@@ -77,7 +77,7 @@ Widget productEquipbuider( context) => GestureDetector(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Name: automatic irrigation ",
+                    Text("Name: ${orderItemsModelOrder.product!.name} ",
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.start,
@@ -88,7 +88,7 @@ Widget productEquipbuider( context) => GestureDetector(
                       ),
                     ),
                     SizedBox(height: 7,),
-                    Text("Number: 1",
+                    Text("Number: ${orderItemsModelOrder.quantity}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.start,
@@ -99,7 +99,7 @@ Widget productEquipbuider( context) => GestureDetector(
                       ),
                     ),
                     SizedBox(height: 7,),
-                    Text("Peice: 5000\$",
+                    Text("Peice: ${orderItemsModelOrder.product!.price}\$",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.start,

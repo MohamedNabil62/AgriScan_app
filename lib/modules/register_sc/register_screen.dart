@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../layout/agriscan_layout.dart';
+import '../../layout/cubit/cubit.dart';
 import '../../shared/components/components.dart';
 import '../../shared/network/local/cache_helper.dart';
 import '../engineer_modules/agriscan_home_engineer/home_screen.dart';
@@ -31,8 +32,8 @@ class _SignupScreenState extends State<SignupScreen> {
     return BlocProvider(create: (context) => AgriScanRegisterCubit(),
 
     child: BlocConsumer<AgriScanRegisterCubit,AgriScanRegisterStates>(listener: (context, state) {
-
       if (state is AgriScanRegisterSuccessState) {
+        AgriScanCubit.get(context).getToken();
         showToast(text: state.RegisterModel.message as String,
             state: ToastState.SUCCESS
         );

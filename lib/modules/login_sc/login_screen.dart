@@ -1,4 +1,5 @@
 import 'package:agriscan/layout/agriscan_layout.dart';
+import 'package:agriscan/layout/cubit/cubit.dart';
 import 'package:agriscan/modules/login_sc/cubit/state.dart';
 import 'package:agriscan/shared/components/authentication_button.dart';
 import 'package:agriscan/shared/components/components.dart';
@@ -37,14 +38,21 @@ class _LoginScreenState extends State<LoginScreen> {
         {
 
           {
+            AgriScanCubit.get(context).getToken();
             CacheHelper.saveData(
                 kay: "token",
                 value:state.LoginModel.data?.token ).then((value) {
               token=CacheHelper.getData(kay: 'token');
-              if(state.LoginModel.data?.user?.role=='user')
-                navigtorAndFinish(context,AgriScanLayout());
-              if(state.LoginModel.data?.user?.role=='eng')
-                navigtorAndFinish(context,HomeEngineerScreen());
+              if(state.LoginModel.data?.user?.role=='user') {
+                CacheHelper.saveData(kay: "eng", value: false).then((value) {
+                  navigtorAndFinish(context, AgriScanLayout());
+                });
+              }
+              if(state.LoginModel.data?.user?.role=='eng') {
+                CacheHelper.saveData(kay: "eng", value: true).then((value) {
+                  navigtorAndFinish(context, HomeEngineerScreen());
+                });
+              }
             } );
           }
         }

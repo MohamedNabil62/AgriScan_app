@@ -1,10 +1,13 @@
+import 'package:agriscan/modules/user_modules/agriscan_engineer/upCoing_meeting_user.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../layout/cubit/cubit.dart';
 import '../../../layout/cubit/state.dart';
+import '../../../models_user/List_eng.dart';
 import '../../../shared/components/components.dart';
 import '../../../shared/components/constants.dart';
 import '../agriscan_crops/corps_details.dart';
@@ -16,28 +19,55 @@ class AgriScanEngineerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<AgriScanCubit,AgriScanStates>(
       builder: (context, state) {
-        return ConditionalBuilder(
-          condition: true,
-          builder: (context) => ListView.separated(
+        return Scaffold(
+          body: ConditionalBuilder(
+            condition:AgriScanCubit.get(context).modelListEng != null,
+            builder: (context) => ListView.separated(
               physics: BouncingScrollPhysics(),
               itemBuilder: (context, index){
-                  return buildChatItem(context);
+                return buildChatItem(context,AgriScanCubit.get(context).modelListEng!.data![index]);
               },
               separatorBuilder: (context, index) =>meSlider(),
-              itemCount: 10,
+              itemCount: AgriScanCubit.get(context).modelListEng!.data!.length,
+            ),
+            fallback: (context) => Padding(
+              padding: const EdgeInsets.only(top: 350.0),
+              child: Center(
+                child: SpinKitFadingCircle(
+                  color: Colors.green,
+                  size: 50,
+                ),
+              ),
+            ),
           ),
-          fallback: (context) => Center(child: CircularProgressIndicator()),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {
+              nevgitto(context,  AgriUpcomingMeetingScreenUser());
+            },
+            label: Text('UpComingMeeting'), // Text to display inside the button
+            icon: Icon(Icons.meeting_room_outlined), // Icon to display before the label
+            backgroundColor: kDarkGreenColor, // Background color of the button
+            foregroundColor: Colors.white, // Color of the label and icon
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10), // Adjust the value to change the corner radius
+            ),
+            tooltip: 'UpComingMeeting',
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat, //
         );
       }, listener:(context, state) {},
     );
   }
 }
-
-Widget buildChatItem(context) {
-
+Widget buildChatItem(context,DataModelListEng dataModelListEng) {
+ if(dataModelListEng!.rates!.overRating==null)
+ {
+   dataModelListEng!.rates!.overRating=0;
+ }
   return InkWell(
     onTap: (){
-      nevgitto(context, WeekDaysList());
+      AgriScanCubit.get(context).timeEng(dataModelListEng.id as int);
+      nevgitto(context, WeekDaysList(dataModelListEng.id as int));
     },
     child:   Padding(
       padding: const EdgeInsets.only(top: 10.0,left: 15),
@@ -68,7 +98,7 @@ Widget buildChatItem(context) {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Mohamed Nabil",
+                Text(dataModelListEng.name as String??'',
                   style: GoogleFonts.poppins(
                     color: kDarkGreenColor,
                   ),
@@ -76,7 +106,7 @@ Widget buildChatItem(context) {
                 ),
                 Row(
                   children: [
-                    Text( '4 Star Rating',
+                    Text( dataModelListEng!.rates!.overRating.toString(),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -85,7 +115,7 @@ Widget buildChatItem(context) {
                     ),
                     SizedBox(width: 5,),
                     StarRating(
-                      stars:4,
+                      stars:dataModelListEng!.rates!.overRating?.toDouble()??0.0,
                       size: 16.0,
                       onChanged: (value) {},
                     )

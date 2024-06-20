@@ -34,6 +34,28 @@ class AgriScanSettingScreenEngineer extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.account_balance_wallet,
+                        color: Colors.white,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        "\$${AgriScanCubit.get(context).agriScanDataUserModel?.data?.balance}", // Replace with actual balance
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
               backgroundColor: kDarkGreenColor,
             ),
             body:   Padding(

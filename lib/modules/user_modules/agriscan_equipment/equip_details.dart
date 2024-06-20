@@ -1,10 +1,19 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../shared/components/components.dart';
 import '../../../shared/components/constants.dart';
+import '../agriscan_cart/cart_screen.dart';
+import '../agriscan_cart/cuibt/cuibt.dart';
 
 class EquipmentDetails extends StatefulWidget {
-  const EquipmentDetails({ Key? key}) : super(key: key);
+  String? name;
+  String? des;
+  String? path;
+  int? pris;
+  int? id;
+  EquipmentDetails(this.name,this.des,this.path,this.pris,this.id,{ Key? key}) : super(key: key);
 
   @override
   State<EquipmentDetails> createState() => _EquipmentDetailsState();
@@ -15,6 +24,7 @@ class _EquipmentDetailsState extends State<EquipmentDetails> {
   int quantity = 1;
   @override
   Widget build(BuildContext context) {
+    bool ch=false;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -50,8 +60,13 @@ class _EquipmentDetailsState extends State<EquipmentDetails> {
             color: kSpiritedGreen,
             padding: const EdgeInsets.only(top: 40.0),
             child: Hero(
-              tag: 'automatic irrigation',
-              child: Image.network("https://img.freepik.com/premium-photo/equipment-automatic-irrigation-large-field_120225-743.jpg?w=740"),
+              tag: '${widget.name}',
+              child: CachedNetworkImage(
+                imageUrl: "https://acms-testing.smaster.live/${widget.path}",
+                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Container(
@@ -87,10 +102,11 @@ class _EquipmentDetailsState extends State<EquipmentDetails> {
                             ),
                           ),
                           const SizedBox(height: 4.0),
+
                           Row(
                             children: [
                               Text(
-                                '10k\$',
+                                'Price: ${widget.pris}\$',
                                 style: TextStyle(
                                   color: Colors.green.shade600,
                                   fontSize: 18.0,
@@ -99,6 +115,31 @@ class _EquipmentDetailsState extends State<EquipmentDetails> {
                               ),
                             ],
                           ),
+                          Row(children: [
+                            Container(
+                              child:  Text(
+                                'Total Price: ',
+                                style: TextStyle(
+                                  color: Colors.green.shade600,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 3,),
+                            Container(
+                              width: 150,
+                              child: Text(
+                                '${widget.pris! * CartCubit.get(context).x} \$',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ],),
                         ],
                       ),
                       QuantitySelector(
@@ -130,7 +171,7 @@ class _EquipmentDetailsState extends State<EquipmentDetails> {
                           padding:
                           const EdgeInsets.only(top: 10.0, bottom: 20.0),
                           child: Text(
-                            'Automatic irrigation systems are advanced methods used in agriculture and landscaping to efficiently distribute water to crops, lawns, gardens, and other vegetation. Here\'s some detailed information about automatic irrigation:',
+                            '${widget.des}',
                             style: GoogleFonts.poppins(
                               color: kDarkGreenColor,
                             ),
@@ -154,7 +195,10 @@ class _EquipmentDetailsState extends State<EquipmentDetails> {
                               color: kDarkGreenColor,
                               size: 28.0,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              CartCubit.get(context).totalPrice();
+                              nevgitto(context, CartScreen());
+                            },
                           ),
                         ),
                       ),
@@ -185,7 +229,33 @@ class _EquipmentDetailsState extends State<EquipmentDetails> {
                               ),
                             ],
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            for(int x=0;x<CartCubit.get(context).boradingg.length;x++)
+                            {
+                              if(CartCubit.get(context).boradingg[x].id == widget.id)
+                              {
+                                setState(() {
+                                  ch=true;
+                                });
+                                CartCubit.get(context).addList();
+                                 print("ooooooooooooooooooooooooooooooo");
+                                print(widget.id);
+                              }
+                            }
+                            if(ch)
+                            {
+                              print(CartCubit.get(context).boradingg);
+                              showToast(
+                                text:'This item already exists' ,
+                                state:ToastState.ERROR,
+                              );
+                            }
+                            else{
+                              print("pppppppppppppppppppppppppppppppppppppppppppppppp");
+                              CartCubit.get(context).addValueList(widget.id, widget.path, widget.name, widget.pris.toString(),  CartCubit.get(context).x,widget.pris!.toDouble() * CartCubit.get(context).x as double);
+                            }
+
+                          },
                         ),
                       ),
                     ],
@@ -248,6 +318,7 @@ class _QuantitySelectorState extends State<QuantitySelector> {
                 setState(() {
                   widget.onChanged(
                       quantity != widget.min ? --quantity : widget.min);
+                  CartCubit.get(context).changePriseMinis();
                 });
               },
               child: const Icon(
@@ -259,7 +330,7 @@ class _QuantitySelectorState extends State<QuantitySelector> {
           ),
           Align(
             child: Text(
-              '$quantity',
+              '${CartCubit.get(context).x}',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16.0,
@@ -272,6 +343,7 @@ class _QuantitySelectorState extends State<QuantitySelector> {
                 setState(() {
                   widget.onChanged(
                       quantity != widget.max ? ++quantity : widget.max);
+                  CartCubit.get(context).changePrisePlus();
                 });
               },
               child: const Icon(
