@@ -18,8 +18,7 @@ class HomeEngineerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(create: (context) => EngAgriScanCubit()..getUpComingMeeting(),
-    child: BlocConsumer<EngAgriScanCubit,EngAgriScanStates>(
+    return BlocConsumer<EngAgriScanCubit,EngAgriScanStates>(
       listener: (context, state) {
 
       },
@@ -121,7 +120,6 @@ class HomeEngineerScreen extends StatelessWidget {
           ),
         );
       },
-    ),
     );
   }
 }
