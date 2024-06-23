@@ -119,3 +119,23 @@ class AgriScanStateErrorComingMeetingUser extends AgriScanStates{
 class AgriScanStateLoadingComingMeetingUser extends AgriScanStates{}
 
 class AgriScanStateSuccessComingMeetingUser extends AgriScanStates{}
+//logout
+class AgriScanLogoutErrorState extends AgriScanStates{
+
+  final String error;
+  AgriScanLogoutErrorState(this.error);
+}
+
+class AgriScanLogoutLoadingState extends AgriScanStates{}
+
+class AgriScanLogoutSuccessState extends AgriScanStates{}
+//rate
+class AgriScanRateErrorState extends AgriScanStates{
+
+  final String error;
+  AgriScanRateErrorState(this.error);
+}
+
+class AgriScanRateLoadingState extends AgriScanStates{}
+
+class AgriScanRateSuccessState extends AgriScanStates{}

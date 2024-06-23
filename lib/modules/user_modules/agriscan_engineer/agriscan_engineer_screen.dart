@@ -80,7 +80,7 @@ Widget buildChatItem(context,DataModelListEng dataModelListEng) {
                 context,
                 MaterialPageRoute(
                   builder: (context) => PhotoScreen(
-                    imageUrl: "assets/images/mohamed_nabil.jpg",
+                    imageUrl: "https://img.freepik.com/premium-photo/tractor-driver-wearing-jacket-standing-field-holding-tablet_118124-81563.jpg?w=826",
                     tag: 'photoTag', // Unique tag for the Hero transition
                   ),
                 ),
@@ -88,7 +88,7 @@ Widget buildChatItem(context,DataModelListEng dataModelListEng) {
             },
             child: CircleAvatar(
               radius:25,
-              backgroundImage: AssetImage("assets/images/mohamed_nabil.jpg"),
+              backgroundImage: NetworkImage("https://img.freepik.com/premium-photo/tractor-driver-wearing-jacket-standing-field-holding-tablet_118124-81563.jpg?w=826"),
             ),
           ),
           SizedBox(
@@ -98,12 +98,26 @@ Widget buildChatItem(context,DataModelListEng dataModelListEng) {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(dataModelListEng.name as String??'',
-                  style: GoogleFonts.poppins(
-                    color: kDarkGreenColor,
-                  ),
+               Row(
+                 children: [
+                   Text(dataModelListEng.name as String??'',
+                     style: GoogleFonts.poppins(
+                       color: kDarkGreenColor,
+                     ),
 
-                ),
+                   ),
+                   Padding(
+                     padding: const EdgeInsets.only(left: 28.0),
+                     child: Text('${dataModelListEng.rates?.meetingRate.toString()??''} \$',
+                       style: GoogleFonts.poppins(
+                         color: kDarkGreenColor,
+                       ),
+
+                     ),
+                   ),
+
+                 ],
+               ),
                 Row(
                   children: [
                     Text( dataModelListEng!.rates!.overRating.toString(),

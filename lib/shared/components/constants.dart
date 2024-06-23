@@ -84,7 +84,7 @@ class PhotoScreen extends StatelessWidget {
       body: Center(
         child: Hero(
           tag: tag,
-          child: Image.asset(
+          child: Image.network(
             imageUrl,
             fit: BoxFit.contain,
           ),

@@ -116,7 +116,10 @@ class _BookingPageState extends State<BookingPage> {
       listener: (context, state) {
         if (state is AgriScanStateSuccessCreat) {
           _openUrl(AgriScanCubit.get(context).modelCreate?.data?.paymentUrl as String);
-          showBookingConfirmationDialog();
+
+          Future.delayed(Duration(seconds: 3), () {
+            showBookingConfirmationDialog();
+          });
         }
       },
     );
@@ -182,6 +185,7 @@ class _BookingPageState extends State<BookingPage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
+                    AgriScanCubit.get(context).timeEng(widget.y);
 
                   },
                   child: Text(

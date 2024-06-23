@@ -162,7 +162,7 @@ class _CartScreenState extends State<CartScreen> {
                             width: 200,
                             child: DropdownButton<String>(
                               hint: Padding(
-                                padding: const EdgeInsets.only(right: 290),
+                                padding: const EdgeInsets.only(right: 280),
                                 child: Text('Country'),
                               ),
                               onChanged: (String? newValue) {
@@ -190,7 +190,7 @@ class _CartScreenState extends State<CartScreen> {
                           const SizedBox(height: 20),
                           DropdownButton<String>(
                             hint: Padding(
-                              padding: const EdgeInsets.only(right: 310.0),
+                              padding: const EdgeInsets.only(right: 300.0),
                               child: Text('Cities'),
                             ),
                             onChanged: (String? newValue) {

@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'package:agriscan/shared/components/components.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
 import 'package:image/image.dart' as img; // Add this dependency in pubspec.yaml
+
 class AgriScanAiScreen extends StatefulWidget {
   const AgriScanAiScreen({Key? key}) : super(key: key);
 
@@ -32,10 +34,10 @@ class _AgriScanAiScreenState extends State<AgriScanAiScreen> {
     print('Model loading status: $res');
   }
 
-  Future<void> pickImage() async {
+  Future<void> pickImage(ImageSource source) async {
     final ImagePicker _picker = ImagePicker();
     final XFile? pickedFile = await _picker.pickImage(
-      source: ImageSource.gallery,
+      source: source,
     );
     if (pickedFile != null) {
       File image = File(pickedFile.path);
@@ -94,6 +96,7 @@ class _AgriScanAiScreenState extends State<AgriScanAiScreen> {
         _confidence = recognitions.first['confidence'] * 100;
         if (_confidence! < 50) {
           _resultText = "Photo doesn't contain leaves";
+          _confidence = 0; // Set confidence to 0 when below 50%
         }
       });
     }
@@ -135,13 +138,24 @@ class _AgriScanAiScreenState extends State<AgriScanAiScreen> {
             ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: pickImage,
-        tooltip: 'Pick Image',
-       backgroundColor: Colors.green,
-        child: const Icon(Icons.image),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () => pickImage(ImageSource.gallery),
+            tooltip: 'Pick Image',
+            backgroundColor: Colors.blue,
+            child: const Icon(Icons.image),
+          ),
+          SizedBox(height: 16),
+          FloatingActionButton(
+            onPressed: () => pickImage(ImageSource.camera),
+            tooltip: 'Take a Picture',
+            backgroundColor: Colors.green,
+            child: const Icon(Icons.camera_alt),
+          ),
+        ],
       ),
     );
   }
 }
-

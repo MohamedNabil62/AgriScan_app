@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../layout/cubit/cubit.dart';
@@ -14,6 +15,7 @@ import '../../../models_user/model_creat_meeting.dart';
 import '../../../models_user/model_upcoming_meeting_user.dart';
 import '../../../shared/components/constants.dart';
 import '../../../shared/styles/IconBroken.dart';
+import '../../engineer_modules/agriscan_oppointments/details_day_engineer.dart';
 void _openUrl(String? url) async {
   if (await canLaunch(url!)) {
     await launch(url);
@@ -45,7 +47,7 @@ class AgriUpcomingMeetingScreenUser extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: const Text(
-              "AgriScan Engineer",
+              "AgriScan",
               style: TextStyle(color: Colors.white),
             ),
             leading: IconButton(
@@ -72,7 +74,7 @@ class AgriUpcomingMeetingScreenUser extends StatelessWidget {
                       child: ListView.separated(
                         shrinkWrap: true,
                         separatorBuilder: (context, index) => SizedBox(height: 5),
-                        itemBuilder: (context, index) => buildItemUpcomingMeeting(cubit.modelUpComingMeetingUser!.data![index]),
+                        itemBuilder: (context, index) => buildItemUpcomingMeeting(cubit.modelUpComingMeetingUser!.data![index],context),
                         itemCount: cubit.modelUpComingMeetingUser!.data!.length,
                       ),
                     ),
@@ -96,7 +98,15 @@ class AgriUpcomingMeetingScreenUser extends StatelessWidget {
   }
 }
 
-Widget buildItemUpcomingMeeting(DataModelUpComingMeetingUser data) => Padding(
+Widget buildItemUpcomingMeeting(DataModelUpComingMeetingUser data,context){
+  if (data.status=='Meeting Finished'&& AgriScanCubit.get(context).rata) {
+     print("---------------id-------${data.id} start at ${data.startAt}");
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      showRatingDialog(context, data.id as int);
+      AgriScanCubit.get(context).rata = false;
+    });
+  }
+ return Padding(
   padding: EdgeInsets.only(top: 8.0, left: 8, right: 8),
   child: Container(
     height: 150,
@@ -112,8 +122,8 @@ Widget buildItemUpcomingMeeting(DataModelUpComingMeetingUser data) => Padding(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Status: ${data.status}',
-            style: TextStyle(
+            'Name: ${data.eng?.name}',
+            style:  TextStyle(
               color: Colors.white,
             ),
           ),
@@ -156,3 +166,113 @@ Widget buildItemUpcomingMeeting(DataModelUpComingMeetingUser data) => Padding(
     ),
   ),
 );
+}
+void showRatingDialog(BuildContext context,int id) {
+  int rating = 0; // Use initialRating to set the initial rating.
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            title: Text(
+              'Rate Your Meeting',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: Container(
+              height: 150,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            rating = 1;
+                          });
+                        },
+                        child: Icon(Icons.star, color: rating >= 1 ? Colors.orange : Colors.grey),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            rating = 2;
+                          });
+                        },
+                        child: Icon(Icons.star, color: rating >= 2 ? Colors.orange : Colors.grey),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            rating = 3;
+                          });
+                        },
+                        child: Icon(Icons.star, color: rating >= 3 ? Colors.orange : Colors.grey),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            rating = 4;
+                          });
+                        },
+                        child: Icon(Icons.star, color: rating >= 4 ? Colors.orange : Colors.grey),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            rating = 5;
+                          });
+                        },
+                        child: Icon(Icons.star, color: rating >= 5 ? Colors.orange : Colors.grey),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    rating > 0 ? 'You rated $rating stars!' : 'Tap a star to rate.',
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              Center(
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.blue,
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      AgriScanCubit.get(context).userRateMeeting(id: id, rate: rating);
+                      print(rating);
+                      AgriScanCubit.get(context).rata=false;
+                      Navigator.of(context).pop(rating); // Pass the rating back when 'Okay' is pressed.
+                    },
+                    child: Text(
+                      'Okay',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}

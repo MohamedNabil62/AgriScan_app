@@ -24,10 +24,11 @@ class DataModelUpComingMeetingUser {
   int? id;
   String? startAt;
   String? url;
-  Null? rating;
+  int? rating;
   String? status;
+  EngModelUpComingMeetingUser? eng;
 
-  DataModelUpComingMeetingUser({this.id, this.startAt, this.url, this.rating, this.status});
+  DataModelUpComingMeetingUser({this.id, this.startAt, this.url, this.rating, this.status, this.eng});
 
   DataModelUpComingMeetingUser.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -35,6 +36,41 @@ class DataModelUpComingMeetingUser {
     url = json['url'];
     rating = json['rating'];
     status = json['status'];
+    eng = json['eng'] != null ? new EngModelUpComingMeetingUser.fromJson(json['eng']) : null;
+  }
+
+}
+
+class EngModelUpComingMeetingUser {
+  int? id;
+  String? name;
+  String? email;
+  String? role;
+  int? balance;
+  RatesModelUpComingMeetingUser? rates;
+
+  EngModelUpComingMeetingUser({this.id, this.name, this.email, this.role, this.balance, this.rates});
+
+  EngModelUpComingMeetingUser.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    email = json['email'];
+    role = json['role'];
+    balance = json['balance'];
+    rates = json['rates'] != null ? new RatesModelUpComingMeetingUser.fromJson(json['rates']) : null;
+  }
+
+}
+
+class RatesModelUpComingMeetingUser {
+  int? meetingRate;
+  int? overallRating;
+
+  RatesModelUpComingMeetingUser({this.meetingRate, this.overallRating});
+
+  RatesModelUpComingMeetingUser.fromJson(Map<String, dynamic> json) {
+    meetingRate = json['meeting_rate'];
+    overallRating = json['overall_rating'];
   }
 
 }

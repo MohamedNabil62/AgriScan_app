@@ -40,8 +40,8 @@ class EngAgriScanCubit extends Cubit<EngAgriScanStates> {
         url: AvailableAppointmentsEng,
         token: tto,
       ).then((value) {
-         modelAvailableAppointmentsEng = ModelAvailableAppointmentsEng.fromJson(value.data);
-         print(modelAvailableAppointmentsEng?.data[0]);
+        modelAvailableAppointmentsEng = ModelAvailableAppointmentsEng.fromJson(value.data);
+
         if (modelAvailableAppointmentsEng!.data.isNotEmpty) {
           modelAvailableAppointmentsEng?.data.forEach((date, appointments) {
             print('Date: $date');

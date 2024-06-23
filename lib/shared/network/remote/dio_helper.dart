@@ -70,5 +70,19 @@ class Diohelper
     return  dio?.put(
       url,queryParameters: query,data: data,);
   }
-
+  static Future<Response?> postDataa(
+      {
+        required String url,
+        Map<String,dynamic>? query,
+        String leng='en',
+        String? token,
+      }
+      ) async{
+    dio?.options.headers=
+    {
+      'Accept':'application/json',
+      'Authorization':token
+    };
+    return  dio?.post(url,queryParameters: query,);
+  }
 }

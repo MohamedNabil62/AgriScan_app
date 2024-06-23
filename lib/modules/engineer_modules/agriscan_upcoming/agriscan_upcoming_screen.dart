@@ -23,71 +23,68 @@ class AgriUpcomingMeetingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return BlocProvider(
-      create: (context) => EngAgriScanCubit()..getUpComingMeeting(),
-      child: BlocConsumer<EngAgriScanCubit, EngAgriScanStates>(
-        listener: (context, state) {
-          if (state is EngAgriScanStateErrorUpComingMeeting) {
-            // Handle error state
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.error),
-              ),
-            );
-          }
-        },
-        builder: (context, state) {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text(
-                "AgriScan Engineer",
-                style: TextStyle(color: Colors.white),
-              ),
-              leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  IconBroken.Arrow___Left_2,
-                  color: Colors.white,
-                ),
-              ),
-              backgroundColor: kDarkGreenColor,
-            ),
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                BlocBuilder<EngAgriScanCubit, EngAgriScanStates>(
-                  builder: (context, state) {
-                    var cubit = EngAgriScanCubit.get(context);
-                    return ConditionalBuilder(
-                      condition: cubit.modelUpComeingMeeting != null && cubit.modelUpComeingMeeting!.data != null && cubit.modelUpComeingMeeting!.data!.isNotEmpty,
-                      builder: (context) => Flexible(
-                        child: ListView.separated(
-                          shrinkWrap: true,
-                          separatorBuilder: (context, index) => SizedBox(height: 5),
-                          itemBuilder: (context, index) => bluidItemUpcomingMeeting(cubit.modelUpComeingMeeting!.data![index]),
-                          itemCount: cubit.modelUpComeingMeeting!.data!.length,
-                        ),
-                      ),
-                      fallback: (context) => Padding(
-                        padding: const EdgeInsets.only(top: 380.0),
-                        child: Center(
-                          child: SpinKitFadingCircle(
-                            color: Colors.green,
-                            size: 50,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
+    return BlocConsumer<EngAgriScanCubit, EngAgriScanStates>(
+      listener: (context, state) {
+        if (state is EngAgriScanStateErrorUpComingMeeting) {
+          // Handle error state
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.error),
             ),
           );
-        },
-      ),
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              "AgriScan Engineer",
+              style: TextStyle(color: Colors.white),
+            ),
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                IconBroken.Arrow___Left_2,
+                color: Colors.white,
+              ),
+            ),
+            backgroundColor: kDarkGreenColor,
+          ),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              BlocBuilder<EngAgriScanCubit, EngAgriScanStates>(
+                builder: (context, state) {
+                  var cubit = EngAgriScanCubit.get(context);
+                  return ConditionalBuilder(
+                    condition: cubit.modelUpComeingMeeting != null && cubit.modelUpComeingMeeting!.data != null && cubit.modelUpComeingMeeting!.data!.isNotEmpty,
+                    builder: (context) => Flexible(
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        separatorBuilder: (context, index) => SizedBox(height: 5),
+                        itemBuilder: (context, index) => bluidItemUpcomingMeeting(cubit.modelUpComeingMeeting!.data![index]),
+                        itemCount: cubit.modelUpComeingMeeting!.data!.length,
+                      ),
+                    ),
+                    fallback: (context) => Padding(
+                      padding: const EdgeInsets.only(top: 380.0),
+                      child: Center(
+                        child: SpinKitFadingCircle(
+                          color: Colors.green,
+                          size: 50,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

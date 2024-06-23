@@ -11,7 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'layout/cubit_eng/cubit.dart';
 import 'modules/engineer_modules/agriscan_home_engineer/home_screen.dart';
+import 'modules/login_sc/cubit/cubit.dart';
 import 'modules/login_sc/login_screen.dart';
+import 'modules/register_sc/cubit/cubit.dart';
 import 'modules/user_modules/agriscan_cart/cuibt/cuibt.dart';
 bool userDataCheck=false;
 Future main() async{
@@ -51,11 +53,13 @@ class MyApp extends StatelessWidget
             create: (context) => AgriScanCubit()..getToken()..getListEng()..getPlantData()..getProdect()..getOrder()..getUpCoingUser()
           ),
           BlocProvider(
-              create: (context) => EngAgriScanCubit()..getAvailableAppointmentsEng()..getAmount()
+              create: (context) => EngAgriScanCubit()..getAvailableAppointmentsEng()..getAmount()..getUpComingMeeting()
           ),
           BlocProvider(
-              create: (context) => CartCubit(),)
-        ],
+              create: (context) => CartCubit(),),
+    BlocProvider(create:(context) => AgriScanLoginCubit()),
+    BlocProvider(create: (context) => AgriScanRegisterCubit()),
+    ],
         child:BlocConsumer<AgriScanCubit,AgriScanStates>(
             listener:(context, state) =>{
              if(state is AgriScanErrorUserDataState)

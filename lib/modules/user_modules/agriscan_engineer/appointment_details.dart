@@ -41,6 +41,7 @@ class WeekDaysList extends StatelessWidget {
             var apiFormattedDate = DateFormat('yyyy-MM-dd').format(now);
             return InkWell(
               onTap: (){
+                print('-------------------------------------------------------${x}');
                 AgriScanCubit.get(context).timeEng(x);
                 bool ch=true;
                 print(ch);

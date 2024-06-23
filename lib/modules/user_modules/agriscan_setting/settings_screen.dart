@@ -6,9 +6,11 @@ import '../../../layout/cubit/cubit.dart';
 import '../../../layout/cubit/state.dart';
 import '../../../shared/components/components.dart';
 import '../../../shared/components/constants.dart';
+import '../../../shared/network/local/cache_helper.dart';
 import '../../../shared/styles/IconBroken.dart';
 import 'dart:io';
 
+import '../../login_sc/login_screen.dart';
 import 'edit_profile.dart';
 
 class AgriScanSettingScreen extends StatelessWidget {
@@ -98,13 +100,46 @@ class AgriScanSettingScreen extends StatelessWidget {
                       ),
                     ),
                   ],),
-
+                  SizedBox(height: 5,),
+                  Row(children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8.0,left: 60,right: 60),
+                        child: OutlinedButton(
+                            onPressed: (){
+                              AgriScanCubit.get(context).userLogout();
+                            },
+                            child:Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  IconBroken.Logout,
+                                  size: 16,
+                                  color: kDarkGreenColor,
+                                ),
+                                SizedBox(width: 10,),
+                                Text('LOGOUT',
+                                  style: TextStyle(
+                                      color:kDarkGreenColor
+                                  ),
+                                )
+                              ],)
+                        ),
+                      ),
+                    ),
+                  ],),
                 ],
               ),
             ),
           );
         },
-        listener:(context, state) {}
+        listener:(context, state) {
+          if(state is AgriScanLogoutSuccessState )
+            CacheHelper.reomveData(kay: "token").then((value) =>
+                navigtorAndFinish(context, LoginScreen())
+            );
+        }
     );
   }
 }

@@ -9,6 +9,7 @@ import 'package:agriscan/shared/components/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../layout/cubit_eng/cubit.dart';
 import '../../shared/network/local/cache_helper.dart';
 import '../engineer_modules/agriscan_home_engineer/home_screen.dart';
 import '../register_sc/register_screen.dart';
@@ -31,25 +32,33 @@ class _LoginScreenState extends State<LoginScreen> {
   var _usernameController=TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(create:(context) => AgriScanLoginCubit() ,
-    child: BlocConsumer<AgriScanLoginCubit,AgriScanLoginStates>(
+    return BlocConsumer<AgriScanLoginCubit,AgriScanLoginStates>(
       listener: (context, state) {
         if(state is AgriScanLoginSuccessState)
         {
 
           {
-            AgriScanCubit.get(context).getToken();
             CacheHelper.saveData(
                 kay: "token",
                 value:state.LoginModel.data?.token ).then((value) {
               token=CacheHelper.getData(kay: 'token');
+              print("token-------------------------$token");
+              AgriScanCubit.get(context).getToken();
               if(state.LoginModel.data?.user?.role=='user') {
                 CacheHelper.saveData(kay: "eng", value: false).then((value) {
+                  AgriScanCubit.get(context).getToken();
+                  AgriScanCubit.get(context).getListEng();
+                  AgriScanCubit.get(context).getProdect();
+                  AgriScanCubit.get(context).getOrder();
+                  AgriScanCubit.get(context).getUpCoingUser();
                   navigtorAndFinish(context, AgriScanLayout());
                 });
               }
               if(state.LoginModel.data?.user?.role=='eng') {
                 CacheHelper.saveData(kay: "eng", value: true).then((value) {
+                  EngAgriScanCubit.get(context).getAvailableAppointmentsEng();
+                  EngAgriScanCubit.get(context).getAmount();
+                  EngAgriScanCubit.get(context).getUpComingMeeting();
                   navigtorAndFinish(context, HomeEngineerScreen());
                 });
               }
@@ -224,7 +233,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
       },
-    ),
     );
   }
 }

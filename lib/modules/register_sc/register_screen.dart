@@ -9,6 +9,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../layout/agriscan_layout.dart';
 import '../../layout/cubit/cubit.dart';
+import '../../layout/cubit_eng/cubit.dart';
 import '../../shared/components/components.dart';
 import '../../shared/network/local/cache_helper.dart';
 import '../engineer_modules/agriscan_home_engineer/home_screen.dart';
@@ -29,27 +30,35 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(create: (context) => AgriScanRegisterCubit(),
-
-    child: BlocConsumer<AgriScanRegisterCubit,AgriScanRegisterStates>(listener: (context, state) {
+    return BlocConsumer<AgriScanRegisterCubit,AgriScanRegisterStates>(listener: (context, state) {
       if (state is AgriScanRegisterSuccessState) {
-        AgriScanCubit.get(context).getToken();
-        showToast(text: state.RegisterModel.message as String,
-            state: ToastState.SUCCESS
-        );
-        CacheHelper.saveData(
-            kay: "token",
-            value: state.RegisterModel.data?.token).then((value) {
-         // CartCubit.get(context).unUser=false;
-         // CartCubit.get(context).done=true;
-          CacheHelper.saveData(kay: "eng", value: rememberMe).then((value) {
+        {
+          CacheHelper.saveData(
+              kay: "token",
+              value:state.RegisterModel.data?.token ).then((value) {
             token=CacheHelper.getData(kay: 'token');
-            if(state.RegisterModel.data?.user?.role=='user')
-              navigtorAndFinish(context,AgriScanLayout());
-            if(state.RegisterModel.data?.user?.role=='eng')
-              navigtorAndFinish(context,HomeEngineerScreen());
-          });
-        });
+            print("token-------------------------$token");
+            AgriScanCubit.get(context).getToken();
+            if(state.RegisterModel.data?.user?.role=='user') {
+              CacheHelper.saveData(kay: "eng", value: false).then((value) {
+                AgriScanCubit.get(context).getToken();
+                AgriScanCubit.get(context).getListEng();
+                AgriScanCubit.get(context).getProdect();
+                AgriScanCubit.get(context).getOrder();
+                AgriScanCubit.get(context).getUpCoingUser();
+                navigtorAndFinish(context, AgriScanLayout());
+              });
+            }
+            if(state.RegisterModel.data?.user?.role=='eng') {
+              CacheHelper.saveData(kay: "eng", value: true).then((value) {
+                EngAgriScanCubit.get(context).getAvailableAppointmentsEng();
+                EngAgriScanCubit.get(context).getAmount();
+                EngAgriScanCubit.get(context).getUpComingMeeting();
+                navigtorAndFinish(context, HomeEngineerScreen());
+              });
+            }
+          } );
+        }
       } else if (state is AgriScanRegisterErrorState) {
       }
     },
@@ -293,7 +302,6 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
       );
     },
-    ),
     );
   }
 }

@@ -11,18 +11,23 @@ class ModelAvailableAppointmentsUser {
     this.code,
   });
 
-  ModelAvailableAppointmentsUser.fromJson(Map<String, dynamic> json)
-      : data = {}, // Initialize data as an empty map by default
-        success = json['success'],
-        message = json['message'],
-        code = json['code'] {
-    if (json['data'] != null) {
+  factory ModelAvailableAppointmentsUser.fromJson(Map<String, dynamic> json) {
+    // Check if 'data' is a List or Map and initialize accordingly
+    Map<String, List<AppointmentUser>> parsedData = {};
+    if (json['data'] is Map) {
       json['data'].forEach((date, appointments) {
-        data[date] = (appointments as List)
+        parsedData[date] = (appointments as List)
             .map((e) => AppointmentUser.fromJson(e))
             .toList();
       });
     }
+
+    return ModelAvailableAppointmentsUser(
+      success: json['success'],
+      data: parsedData,
+      message: json['message'],
+      code: json['code'],
+    );
   }
 }
 

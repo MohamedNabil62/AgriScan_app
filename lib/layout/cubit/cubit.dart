@@ -18,6 +18,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import '../../models/logout_model.dart';
+import '../../models_user/model_rate.dart';
 import '../../models_user/model_time.dart';
 import '../../modules/user_modules/agriscan_ai/agriscan_ai_screen.dart';
 import '../../modules/user_modules/agriscan_crops/corps_screen.dart';
@@ -31,6 +33,8 @@ class AgriScanCubit extends Cubit<AgriScanStates>{
 
   AgriScanCubit():super(AgriScanInitialState());
   static AgriScanCubit get(context) => BlocProvider.of(context);
+  bool rata=true;
+
   bool staut=false;
   IconData icon=Icons.edit;
   void ChangeBottemSheetState({
@@ -177,47 +181,47 @@ void getListEng()
 }
 
 ModelAvailableAppointmentsUser? modelAvailableAppointmentsUser;
-void timeEng(int id)
-{
-  emit(AgriScanStateLoadingTimeUser());
+  void timeEng(int id) {
+    emit(AgriScanStateLoadingTimeUser());
 
-  if (token != null) {
-    String tto = 'Bearer $token'; // Ensure tto is initialized correctly
+    if (token != null) {
+      String tto = 'Bearer $token'; // Ensure tto is initialized correctly
 
-    Diohelper.get(
-      url:  '/users/engs/${id}/available-times',
-      token: tto,
-    ).then((value) {
-      modelAvailableAppointmentsUser=ModelAvailableAppointmentsUser.fromJson(value.data);
-      if (modelAvailableAppointmentsUser!.data.isNotEmpty) {
-        modelAvailableAppointmentsUser?.data.forEach((date, appointments) {
-          print('Date: $date');
-          for (var appointment in appointments) {
-            print('Appointment ID: ${appointment.id}, Time: ${appointment.time}');
-          }
-        });
-      } else {
-        print('No appointments available.'); // Handle case where data is empty
-      }
-      emit(AgriScanStateSuccessTimeUser());
-    }).catchError((error) {
-      if (error is DioError) {
-        if (error.response != null) {
-          print('Error Response: ${error.response!.data}');
-          print('Error Status Code: ${error.response!.statusCode}');
+      Diohelper.get(
+        url: '/users/engs/${id}/available-times',
+        token: tto,
+      ).then((value) {
+        modelAvailableAppointmentsUser = ModelAvailableAppointmentsUser.fromJson(value.data);
+        if (modelAvailableAppointmentsUser!.data.isNotEmpty) {
+          modelAvailableAppointmentsUser?.data.forEach((date, appointments) {
+            print('Date: $date');
+            for (var appointment in appointments) {
+              print('Appointment ID: ${appointment.id}, Time: ${appointment.time}');
+            }
+          });
         } else {
-          print('Error Message: ${error.message}');
+          print('No appointments available.'); // Handle case where data is empty
         }
-      } else {
-        print('Unexpected Error: ${error.toString()}');
-      }
-      emit(AgriScanStateErrorTimeUser(error.toString()));
-    });
-  } else {
-    print('Token is null');
-    emit(AgriScanStateErrorTimeUser('Token is null'));
+        emit(AgriScanStateSuccessTimeUser());
+      }).catchError((error) {
+        if (error is DioError) {
+          if (error.response != null) {
+            print('Error Response: ${error.response!.data}');
+            print('Error Status Code: ${error.response!.statusCode}');
+          } else {
+            print('Error Message: ${error.message}');
+          }
+        } else {
+          print('Unexpected Error: ${error.toString()}');
+        }
+        emit(AgriScanStateErrorTimeUser(error.toString()));
+      });
+    } else {
+      print('Token is null');
+      emit(AgriScanStateErrorTimeUser('Token is null'));
+    }
   }
-}
+
 
 ModelCreate? modelCreate;
 int? bo;
@@ -408,6 +412,64 @@ ModelPlant? modelPlant;
       print('Token is null');
       emit(AgriScanStateErrorOrder('Token is null'));
     }
+  }
+  LogoutResponse? logoutResponse;
+  void userLogout() {
+    emit(AgriScanLogoutLoadingState());
+    Diohelper.postDataa(
+      url: '/auth/logout',
+      token: 'Bearer $token'
+    ).then((value) {
+      print(value?.data);
+      logoutResponse = LogoutResponse.fromJson(value?.data);
+      showToast(text:logoutResponse?.message as String, state: ToastState.SUCCESS);
+      emit(AgriScanLogoutSuccessState());
+    }).catchError((error) {
+      if (error is DioError) {
+        if (error.response?.statusCode == 422) {
+          print('Validation Error: ${error.response?.data}');
+          emit(AgriScanLogoutErrorState('Validation Error: ${error.response?.data}'));
+        } else {
+          print('Dio Error: ${error.message}');
+          emit(AgriScanLogoutErrorState('Dio Error: ${error.message}'));
+        }
+      } else {
+        print('Unexpected Error: ${error.toString()}');
+        emit(AgriScanLogoutErrorState('Unexpected Error: ${error.toString()}'));
+      }
+    });
+  }
+  ModelRatingUser? modelRatingUser;
+  void userRateMeeting({
+    required int id,
+    required int rate,
+  }) {
+    emit(AgriScanRateLoadingState());
+    Diohelper.postData(
+      url: '/users/meetings/add-review',
+      data: {
+        'meeting_id': id,
+        'rate': rate,
+      },
+        token: 'Bearer $token'
+    ).then((value) {
+      print(value?.data);
+      modelRatingUser=ModelRatingUser.fromJson(value?.data);
+      emit(AgriScanRateSuccessState());
+    }).catchError((error) {
+      if (error is DioError) {
+        if (error.response?.statusCode == 422) {
+          print('Validation Error: ${error.response?.data}');
+          emit(AgriScanRateErrorState('Validation Error: ${error.response?.data}'));
+        } else {
+          print('Dio Error: ${error.message}');
+          emit(AgriScanRateErrorState('Dio Error: ${error.message}'));
+        }
+      } else {
+        print('Unexpected Error: ${error.toString()}');
+        emit(AgriScanRateErrorState('Unexpected Error: ${error.toString()}'));
+      }
+    });
   }
 }
 
