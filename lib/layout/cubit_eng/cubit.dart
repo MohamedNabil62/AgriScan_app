@@ -94,8 +94,8 @@ class EngAgriScanCubit extends Cubit<EngAgriScanStates> {
       }).catchError((error) {
         if (error is DioError) {
           if (error.response?.statusCode == 422) {
-            print('Validation Error: ${error.response?.data}');
-           // showToast(text: '${error.response?.data}', state: ToastState.ERROR);
+            print('Validation Error: ${error.response?.data['message']}');
+            showToast(text: '${error.response?.data['message']}', state: ToastState.ERROR);
             emit(EngAgriScanStateErrorSetAppointments(
                 'Validation Error: ${error.response?.data}'));
           } else {
