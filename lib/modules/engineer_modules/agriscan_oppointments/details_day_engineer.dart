@@ -80,7 +80,9 @@ class  BookingPageEngineer extends StatelessWidget {
             if (EngAgriScanCubit.get(context).staut) {
               if (formkey!.currentState!.validate()) {
                 String x=timecon.text;
-                x = (data as String) +' '+ x.substring(0, x.length - 3);
+                print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx$x');
+                x = (data as String) +' '+ x;
+                print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx$x');
                 List<String> parts = x.split(' ');
                 String? formattedDateTime;
                 if (parts.length >= 2) {
@@ -89,6 +91,7 @@ class  BookingPageEngineer extends StatelessWidget {
                   formattedDateTime= formatDateTime(formattedDateTime);
                   print(formattedDateTime);
                 }
+                //showToast(text:formattedDateTime as String , state: ToastState.SUCCESS);
                 EngAgriScanCubit.get(context).setTime(time:formattedDateTime as String);
               }
             } else {
@@ -107,17 +110,26 @@ class  BookingPageEngineer extends StatelessWidget {
                             children: [
                               Expanded(
                                 flex: 3,
-                                child: TextFormField(
+                                child:TextFormField(
                                   onTap: () {
                                     showTimePicker(
                                       context: context,
                                       initialTime: TimeOfDay.now(),
+                                      builder: (BuildContext context, Widget? child) {
+                                        return MediaQuery(
+                                          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+                                          child: child!,
+                                        );
+                                      },
                                     ).then((value) {
                                       if (value != null) {
-                                        // تعديل الوقت حسب الشروط
+                                        // Adjust time if needed (optional)
                                         TimeOfDay adjustedTime = adjustTime(value);
-                                        timecon.text = adjustedTime.format(context).toString();
-                                        print(adjustedTime.format(context));
+
+                                        // Format the time in 24-hour format
+                                        String formattedTime = '${adjustedTime.hour}:${adjustedTime.minute.toString().padLeft(2, '0')}'; // Example: "14:30"
+                                        timecon.text = formattedTime;
+                                        print(formattedTime);
                                       }
                                     });
                                   },
@@ -125,7 +137,7 @@ class  BookingPageEngineer extends StatelessWidget {
                                   controller: timecon,
                                   validator: (value) {
                                     if (value!.isEmpty) {
-                                      return "time must not be empty";
+                                      return "Time must not be empty";
                                     }
                                     return null;
                                   },
@@ -143,7 +155,8 @@ class  BookingPageEngineer extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                ),
+                                )
+                                ,
                               ),
                             ],
                           ),
