@@ -70,7 +70,8 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
 
     return BlocConsumer<EngAgriScanCubit,EngAgriScanStates>(
       listener: (context, state) {
-
+        if(state is EngAgriScanStateSuccessNewR)
+            EngAgriScanCubit.get(context).getAmount();
       },
       builder: (context, state) {
         return Scaffold(

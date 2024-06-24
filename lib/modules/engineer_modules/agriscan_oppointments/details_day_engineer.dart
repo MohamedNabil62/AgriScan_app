@@ -89,6 +89,7 @@ class  BookingPageEngineer extends StatelessWidget {
                   formattedDateTime= formatDateTime(formattedDateTime);
                   print(formattedDateTime);
                 }
+                //showToast(text:formattedDateTime as String , state: ToastState.SUCCESS);
                 EngAgriScanCubit.get(context).setTime(time:formattedDateTime as String);
               }
             } else {
@@ -188,7 +189,6 @@ class  BookingPageEngineer extends StatelessWidget {
                     EngAgriScanCubit.get(context).getAvailableAppointmentsEng();
                     Navigator.pop(context);
                     Navigator.pop(context);
-                    print("xxxxxxxxxxxxxxxxxxxxxxxxxx");
                     }
                   }
              }

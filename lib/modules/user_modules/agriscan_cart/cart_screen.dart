@@ -1,3 +1,4 @@
+import 'package:agriscan/layout/cubit/cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -361,6 +362,7 @@ class _CartScreenState extends State<CartScreen> {
       if(state is CartSuccessState) {
         if (state.cartModel.success == 1 ) {
           while(CartCubit.get(context).done) {
+            AgriScanCubit.get(context).getOrder();
             _openUrl(
                 '${state.cartModel.data
                     ?.paymentUrl as String}');

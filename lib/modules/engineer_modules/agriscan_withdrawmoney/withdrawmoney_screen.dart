@@ -12,10 +12,8 @@ import '../../../models/model_amount.dart';
 import '../../../shared/components/constants.dart';
 import '../../../shared/styles/IconBroken.dart';
 import 'new_request_screen.dart';
-
 class AgriWithDrawMoneyScreen extends StatelessWidget {
   const AgriWithDrawMoneyScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<EngAgriScanCubit,EngAgriScanStates>(

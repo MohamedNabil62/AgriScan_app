@@ -73,6 +73,7 @@ class MyApp extends StatelessWidget
             },
             builder:(context, state) {
               return  MaterialApp(debugShowCheckedModeBanner: false,
+                  title: "AgriScan",
                   theme: lightmode,
                   darkTheme: darkmode,
                   themeMode:ThemeMode.light,

@@ -82,185 +82,187 @@ class _EquipmentDetailsState extends State<EquipmentDetails> {
               ),
               padding:
               const EdgeInsets.symmetric(vertical: 24.0, horizontal: 20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                             'Automatic Irrigation ',
+                              textAlign: TextAlign.start,
+                              style: GoogleFonts.poppins(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.w600,
+                                color: kDarkGreenColor,
+                              ),
+                            ),
+                            const SizedBox(height: 4.0),
+
+                            Row(
+                              children: [
+                                Text(
+                                  'Price: ${widget.pris}\$',
+                                  style: TextStyle(
+                                    color: Colors.green.shade600,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(children: [
+                              Container(
+                                child:  Text(
+                                  'Total Price: ',
+                                  style: TextStyle(
+                                    color: Colors.green.shade600,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 3,),
+                              Container(
+                                width: 150,
+                                child: Text(
+                                  '${widget.pris! * CartCubit.get(context).x} \$',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                            ],),
+                          ],
+                        ),
+                        QuantitySelector(
+                          min: 1,
+                          max: 8,
+                          initial: 1,
+                          onChanged: (value) {
+                            setState(() {
+                              quantity = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 22.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                           'Automatic Irrigation ',
-                            textAlign: TextAlign.start,
+                            'About',
                             style: GoogleFonts.poppins(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.w600,
                               color: kDarkGreenColor,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                          const SizedBox(height: 4.0),
-
-                          Row(
-                            children: [
-                              Text(
-                                'Price: ${widget.pris}\$',
-                                style: TextStyle(
-                                  color: Colors.green.shade600,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                          Padding(
+                            padding:
+                            const EdgeInsets.only(top: 10.0, bottom: 20.0),
+                            child: Text(
+                              '${widget.des}',
+                              style: GoogleFonts.poppins(
+                                color: kDarkGreenColor,
                               ),
-                            ],
+                            ),
                           ),
-                          Row(children: [
-                            Container(
-                              child:  Text(
-                                'Total Price: ',
-                                style: TextStyle(
-                                  color: Colors.green.shade600,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 3,),
-                            Container(
-                              width: 150,
-                              child: Text(
-                                '${widget.pris! * CartCubit.get(context).x} \$',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                          ],),
                         ],
                       ),
-                      QuantitySelector(
-                        min: 1,
-                        max: 8,
-                        initial: 1,
-                        onChanged: (value) {
-                          setState(() {
-                            quantity = value;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 22.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                    ),
+                    Row(
                       children: [
-                        Text(
-                          'About',
-                          style: GoogleFonts.poppins(
-                            color: kDarkGreenColor,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w600,
+                        Padding(
+                          padding: const EdgeInsets.only(right: 24.0),
+                          child: CircleAvatar(
+                            backgroundColor: kGinColor,
+                            radius: 26.0,
+                            child: IconButton(
+                              color: Colors.white,
+                              splashRadius: 28.0,
+                              icon: Icon(
+                                Icons.shopping_cart_outlined,
+                                color: kDarkGreenColor,
+                                size: 28.0,
+                              ),
+                              onPressed: () {
+                                CartCubit.get(context).totalPrice();
+                                nevgitto(context, CartScreen());
+                              },
+                            ),
                           ),
                         ),
-                        Padding(
-                          padding:
-                          const EdgeInsets.only(top: 10.0, bottom: 20.0),
-                          child: Text(
-                            '${widget.des}',
-                            style: GoogleFonts.poppins(
-                              color: kDarkGreenColor,
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: kDarkGreenColor,
+                              elevation: 20.0,
+                              textStyle: GoogleFonts.poppins(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 12.0),
                             ),
+                            child:  Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.shopping_bag_outlined,
+                                  size: 24.0,
+                                ),
+                                SizedBox(width: 10.0),
+                                Text(
+                                  'Add to Card',
+                                ),
+                              ],
+                            ),
+                            onPressed: () {
+                              for(int x=0;x<CartCubit.get(context).boradingg.length;x++)
+                              {
+                                if(CartCubit.get(context).boradingg[x].id == widget.id)
+                                {
+                                  setState(() {
+                                    ch=true;
+                                  });
+                                  CartCubit.get(context).addList();
+                                   print("ooooooooooooooooooooooooooooooo");
+                                  print(widget.id);
+                                }
+                              }
+                              if(ch)
+                              {
+                                print(CartCubit.get(context).boradingg);
+                                showToast(
+                                  text:'This item already exists' ,
+                                  state:ToastState.ERROR,
+                                );
+                              }
+                              else{
+                                print("pppppppppppppppppppppppppppppppppppppppppppppppp");
+                                CartCubit.get(context).addValueList(widget.id, widget.path, widget.name, widget.pris.toString(),  CartCubit.get(context).x,widget.pris!.toDouble() * CartCubit.get(context).x as double);
+                              }
+
+                            },
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 24.0),
-                        child: CircleAvatar(
-                          backgroundColor: kGinColor,
-                          radius: 26.0,
-                          child: IconButton(
-                            color: Colors.white,
-                            splashRadius: 28.0,
-                            icon: Icon(
-                              Icons.shopping_cart_outlined,
-                              color: kDarkGreenColor,
-                              size: 28.0,
-                            ),
-                            onPressed: () {
-                              CartCubit.get(context).totalPrice();
-                              nevgitto(context, CartScreen());
-                            },
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: kDarkGreenColor,
-                            elevation: 20.0,
-                            textStyle: GoogleFonts.poppins(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 12.0),
-                          ),
-                          child:  Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.shopping_bag_outlined,
-                                size: 24.0,
-                              ),
-                              SizedBox(width: 10.0),
-                              Text(
-                                'Add to Card',
-                              ),
-                            ],
-                          ),
-                          onPressed: () {
-                            for(int x=0;x<CartCubit.get(context).boradingg.length;x++)
-                            {
-                              if(CartCubit.get(context).boradingg[x].id == widget.id)
-                              {
-                                setState(() {
-                                  ch=true;
-                                });
-                                CartCubit.get(context).addList();
-                                 print("ooooooooooooooooooooooooooooooo");
-                                print(widget.id);
-                              }
-                            }
-                            if(ch)
-                            {
-                              print(CartCubit.get(context).boradingg);
-                              showToast(
-                                text:'This item already exists' ,
-                                state:ToastState.ERROR,
-                              );
-                            }
-                            else{
-                              print("pppppppppppppppppppppppppppppppppppppppppppppppp");
-                              CartCubit.get(context).addValueList(widget.id, widget.path, widget.name, widget.pris.toString(),  CartCubit.get(context).x,widget.pris!.toDouble() * CartCubit.get(context).x as double);
-                            }
-
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

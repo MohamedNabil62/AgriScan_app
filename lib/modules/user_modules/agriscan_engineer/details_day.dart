@@ -185,6 +185,7 @@ class _BookingPageState extends State<BookingPage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
+                    AgriScanCubit.get(context).getUpCoingUser();
                     AgriScanCubit.get(context).timeEng(widget.y);
 
                   },
