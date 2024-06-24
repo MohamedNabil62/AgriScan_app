@@ -17,6 +17,7 @@ class AgriScanLastOrdersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AgriScanCubit.get(context).getOrder();
     return BlocConsumer<AgriScanCubit,AgriScanStates>(
       builder:(context, state) =>Scaffold(
         appBar:AppBar(
@@ -25,10 +26,26 @@ class AgriScanLastOrdersScreen extends StatelessWidget {
         body:ConditionalBuilder(
           condition:AgriScanCubit.get(context).modelOrder != null && AgriScanCubit.get(context).modelOrder!.data!.orders!.isNotEmpty,
           builder:(context) => ListView.separated(
-            itemBuilder: (context, index) =>productEquipbuider(context,AgriScanCubit.get(context).modelOrder!.data!.orders![0].orderItems![index]) ,
-            itemCount: AgriScanCubit.get(context).modelOrder!.data!.orders![0].orderItems!.length,
+            itemBuilder: (context, orderIndex) {
+              // Get the current order
+              OrdersModelOrder order = AgriScanCubit.get(context).modelOrder!.data!.orders![orderIndex];
+
+              // Return a ListView.builder for order items within each order
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, itemIndex) =>
+                    productEquipbuider(
+                        context,
+                        order.orderItems![itemIndex], // Access order items directly for the current order
+                        itemIndex // Pass itemIndex for unique identification
+                    ),
+                itemCount: order.orderItems!.length,
+              );
+            },
+            itemCount: AgriScanCubit.get(context).modelOrder!.data!.orders!.length,
             separatorBuilder: (context, index) => SizedBox(height: 0,),
-          ),//AgriScanCubit.get(context).hommodel as HomeModel,AgriScanCubit.get(context).categoriesmodel as CategoriesModel,context),
+          ),
           fallback: (context) => Center(
             child: SpinKitFadingCircle(
               color: Colors.green,
@@ -43,7 +60,7 @@ class AgriScanLastOrdersScreen extends StatelessWidget {
     );
   }
 }
-Widget productEquipbuider( context,OrderItemsModelOrder orderItemsModelOrder) => GestureDetector(
+Widget productEquipbuider( context,OrderItemsModelOrder orderItemsModelOrder,int index) => GestureDetector(
   onTap:(){
   },
   child: Padding(

@@ -394,6 +394,8 @@ ModelPlant? modelPlant;
         token: tto,
       ).then((value) {
        modelOrder=ModelOrder.fromJson(value.data);
+       List<OrdersModelOrder>? k=modelOrder?.data?.orders;
+       print('-----------------------------------------------------${k![0].orderItems![0].quantity}');
         emit(AgriScanStateSuccessOrder());
       }).catchError((error) {
         if (error is DioError) {
